@@ -1,10 +1,16 @@
 class Vec2 {
-    x = 0;
-    y = 0;
-
     constructor(x, y) {
         this.x = x;
         this.y = y;
+    }
+}
+
+class Vec4 {
+    constructor(x, y, z, w) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
 }
 
@@ -64,11 +70,12 @@ function Vec2DivScalar(a, b) {
     return result;
 }
 
+function Vec2Dot(a, b) {
+    return (a.x * b.x) + (a.y * b.y); 
+}
 
 
 class Mat4 {
-    m = undefined;
-
     constructor() {
         this.m = [
             1, 0, 0, 0,

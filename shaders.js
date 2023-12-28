@@ -11,8 +11,12 @@ const basicVertexShaderSrc = `
 `;
 
 const basicFragmentShaderSrc = `
+    precision mediump float;
+
+    uniform vec4 Color;
+    
     void main() {
-        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        gl_FragColor = Color;
     }
 `;
 
@@ -29,9 +33,6 @@ function CreateShader(src, type) {
 }
 
 class Shader {
-
-    program = undefined;
-
     Initialize(vertSrc, fragSrc) {
         
         let vertShader = CreateShader(vertSrc, gl.VERTEX_SHADER);

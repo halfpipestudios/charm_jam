@@ -1,4 +1,65 @@
-var sprite = undefined;
+var hero = undefined;
+var enemy = undefined;
+var pistol = undefined;
+
+class Pistol {
+    constructor(pos) {
+        this.pos = pos;
+        this.bullets = [
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1)),
+            new Sprite(new Vec2(0, 0), new Vec2(0, 100), 10, 10, new Vec4(0.5, 0, 1, 1))            
+        ];
+        this.currentBullet = 0;
+        this.timer = 0.0;
+    }
+
+    Shoot(pos) {
+        this.bullets[this.currentBullet].pos = pos;
+        this.bullets[this.currentBullet].vel = new Vec2(0, 100);
+        this.currentBullet++;
+        if(this.currentBullet >= 10) {
+            this.currentBullet = 0;
+        }
+    }
+
+    Update(pos, dt) {
+        this.timer += dt;
+    
+        if(KeyDown(65)) {
+            /*
+            if(this.timer >= 0.2) {
+                this.Shoot(new Vec2(pos.x, pos.y));
+                this.timer = 0.0
+            } 
+            */
+
+            for(let i = 0; i < 10; ++i) {
+                this.bullets[i].pos.y += 100 * dt;
+            }
+        }
+
+        /*
+        for(let i = 0; i < 10; ++i) {
+            this.bullets[i].pos = Vec2Add(this.bullets[i].pos, Vec2MulScalar(this.bullets[i].vel, dt));
+        }
+        */
+    }
+
+    Render(shader) {
+        for(let i = 0; i < 10; ++i) {
+            this.bullets[i].Render(shader);
+        }
+    }
+
+}
 
 class Game {
 
@@ -20,7 +81,9 @@ class Game {
 
         console.log(c);
 
-        sprite = new Sprite(new Vec2(55, 50), new Vec2(0, 0), 100, 100, null);
+        hero = new Sprite(new Vec2(320, 60), new Vec2(0, 0), 50, 50, new Vec4(0.5, 1, 0, 1));
+        enemy = new Sprite(new Vec2(320, 400), new Vec2(0, 0), 200, 100, new Vec4(1.0, 0.5, 0, 1));
+        pistol = new Pistol(hero.pos);
 
         this.basicShader.Bind();
         let identity = new Mat4;
@@ -29,37 +92,35 @@ class Game {
 
         let ortho = Mat4Orthographic(0, 640, 0, 480, 0, -100.0);
         gl.uniformMatrix4fv(this.basicShader.GetUniformLocation("Proj"), false, ortho.m);
-
     }
 
     Update(deltaTime) {
 
         if(KeyDown(KeyCode.KEY_LEFT)) {
-            sprite.pos.x -= 100 * deltaTime;
+            hero.pos.x -= 100 * deltaTime;
         }
 
         if(KeyDown(KeyCode.KEY_RIGHT)) {
-            sprite.pos.x += 100 * deltaTime;
+            hero.pos.x += 100 * deltaTime;
         }
 
         if(KeyDown(KeyCode.KEY_UP)) {
-            sprite.pos.y += 100 * deltaTime;
+            hero.pos.y += 100 * deltaTime;
         }
 
         if(KeyDown(KeyCode.KEY_DOWN)) {
-            sprite.pos.y -= 100 * deltaTime;
+            hero.pos.y -= 100 * deltaTime;
         }
 
-        if(KeyJustDown(65)) {
-            console.log("Key A down");
-            this.soundManager.GetSound("cave").Play();
-        }
-
-        sprite.Update(deltaTime);
+        hero.Update(deltaTime);
+        enemy.Update(deltaTime);
+        pistol.Update(hero.pos, deltaTime);
     }
 
     Render() {
-        sprite.Render(this.basicShader);
+        hero.Render(this.basicShader);
+        enemy.Render(this.basicShader);
+        pistol.Render(this.basicShader);
     }
 
 }
