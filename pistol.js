@@ -30,8 +30,8 @@ class Pistol {
     }
 
     Shoot(pos, vel) {
-        soundManager.GetSound("shoot").Stop();
-        soundManager.GetSound("shoot").Play();
+        g.soundManager.GetSound("shoot").Stop();
+        g.soundManager.GetSound("shoot").Play();
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
         this.bullets[this.currentBullet].sprite.color = new Vec4(0, 1, 0, 1);
@@ -50,8 +50,6 @@ class Pistol {
            KeyDown(KeyCode.KEY_RIGHT)) {
         
             if(this.timer >= 0.1) {
-                //let mouseP = new Vec2(MouseX(), MouseY());
-                //let dir = Vec2MulScalar(Vec2Normalize(Vec2Sub(mouseP, pos)), 800.0);
                 this.Shoot(pos, Vec2MulScalar(dir, 800));
                 this.timer = 0.0
             } 
@@ -65,12 +63,11 @@ class Pistol {
             let t = IntersectRayAABB(ray, aabb);
             let d = Vec2MulScalar(this.bullets[i].vel, dt);
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
-                soundManager.GetSound("hit").Stop();
-                soundManager.GetSound("hit").Play();
+                g.soundManager.GetSound("hit").Stop();
+                g.soundManager.GetSound("hit").Play();
                 this.bullets[i].sprite.color = new Vec4(1, 0, 0, 1);
                 let randX = Math.random() * 2.0 - 1;
                 let randY = Math.random() * 2.0 - 1;
-                //this.bullets[i].pos = new Vec2(0, 0);
                 this.bullets[i].vel = Vec2MulScalar(this.bullets[i].vel, -0.2);
             }
 

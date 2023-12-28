@@ -7,62 +7,75 @@ const SawState = {
 
 class Saw {
 
-    constructor(pos) {
+    constructor(parent, offset) {
 
-        this.pos = pos;
+        this.parent = parent;
+        this.offset = offset;
         
-        this.start = pos;
-        this.end = Vec2;
+        this.start = Vec2Add(this.parent.pos, this.offset);
+        this.end = new Vec2;
+        
+        this.pos = this.start;
 
         this.speed = 0;
         this.enableTime = 0;
         this.currentTime = 0;
+
+        this.hitOnce = false;
 
         this.state = SawState.Idle;
         
     }
 
     Shot(target, speed) {
-        if(this.state != SawState.Idle) return; 
-        this.state = SawState.Shotting;
-        
         if(speed < 0.001) return;
 
-        this.speed = speed;
+        if(this.state != SawState.Idle) return; 
+        this.state = SawState.Shoting;
         
-        this.start = pos;
-        this.end = target;
+        this.speed = speed;
+        this.end.x = target.x;
+        this.end.y = target.y;
         
         this.currentTime = 0;
         this.enableTime = Vec2Sub(this.end, this.start).length() / this.speed;
-        this.enable = true;
     }
 
     Update(dt) {
-
+    
         switch(this.state) {
             case SawState.Idle:
-                ProcessIdleState();
+                this.ProcessIdleState(dt);
                 break;
-            case SawState.Shotting:
-                ProcessShottingState();
+            case SawState.Shoting:
+                this.ProcessShottingState(dt);
                 break;
             case SawState.Returning:
-                ProcessReturningState();
+                this.ProcessReturningState(dt);
                 break;
         }
 
     }
 
     Render() {
-        
+        let sprite = new Sprite(this.pos, 16, 16, new Vec4(0.7, 0.3, 0, 1));
+        sprite.Render(g.shader);
     }
     
-    ProcessIdleState() {
+    ProcessIdleState(dt) {
         // NOTE: When the saw is idle there is no need to update the position
+        this.start = Vec2Add(this.parent.pos, this.offset);
+        this.pos = this.start;
+
+        let hero = g.hero;
+        //if(!this.hitOnce && TestCircleAABB(this.GetCircle(), hero.GetAABB())) {   
+            // TODO: reduce hero health!!!!
+        //    this.hitOnce = true;
+        //}
+
     }
 
-    ProcessShottingState() {
+    ProcessShottingState(dt) {
 
         if(this.currentTime > this.enableTime) {
             this.currentTime = 0;
@@ -74,21 +87,34 @@ class Saw {
         let dir = Vec2Normalize(Vec2Sub(this.end, this.start));
         this.pos = Vec2Add(this.start, Vec2MulScalar(dir, this.speed * this.currentTime));
         this.currentTime += dt;
+
+        let hero = g.hero;
+        //if(!hitOnce && TestCircleAABB(this.GetCircle(), hero.GetAABB())) {   
+            // TODO: reduce hero health!!!!
+        //    this.hitOnce = true;
+        //}
     }
 
-    ProcessReturningState() {
+    ProcessReturningState(dt) {
         
-        if(currentTime >= 1) {
+        if(this.currentTime >= 1) {
             this.currentTime = 0;
-            this.enableTime = 0;
+            this.hitOnce = false;
             this.state = SawState.Idle;
             return;
         }
 
         let dir = Vec2Sub(this.start, this.end);
-        this.pos = Vec2Add(this.start, Vec2MulScalar(dir, this.speed * this.currentTime));
-        this.currentTime += dt;
+        this.pos = Vec2Add(this.end, Vec2MulScalar(dir, this.currentTime));
+        this.currentTime += dt * 1;
 
     }
+
+    CalculateTragetFromPlayer(dt) {
+        let result = Vec2;
+        result = g.player.pos;
+        return result;
+    }
+
 
 }
