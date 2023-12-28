@@ -1,8 +1,7 @@
 class Sprite {
 
-    constructor(pos, vel, w, h, color) {
+    constructor(pos, w, h, color) {
         this.pos = pos;
-        this.vel = vel;
         this.w = w;
         this.h = h;
         this.color = color;

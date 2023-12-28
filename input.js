@@ -1,8 +1,13 @@
 const KeyCode = {
+    KEY_SPACE: 32,
     KEY_LEFT: 37,
     KEY_UP: 38,
     KEY_RIGHT: 39,
-    KEY_DOWN: 40
+    KEY_DOWN: 40,
+    KEY_A: 65,
+    KEY_D: 68,
+    KEY_S: 83,
+    KEY_W: 87,
 }
 
 const MouseCode = {
@@ -27,10 +32,11 @@ function OnKeyUp(ev) {
 }
 
 function OnMouseMove(ev) {
+    // TODO: see if this is too slow
     let canvas = document.getElementById("glcanvas");
     var clientRect = canvas.getBoundingClientRect();
     mouseX = ev.clientX - clientRect.left;
-    mouseY = ev.clientY - clientRect.top;
+    mouseY = (clientRect.bottom - clientRect.top) - (ev.clientY - clientRect.top);
 }
 
 function OnMouseDown(ev) {

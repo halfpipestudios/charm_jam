@@ -42,3 +42,5 @@ class SoundManager {
     }
 
 }
+
+var soundManager = undefined;

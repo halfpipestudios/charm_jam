@@ -1,0 +1,105 @@
+ function AdjustAngle(angle) {
+    let outAngle = angle;
+    while(outAngle >  Math.PI) outAngle -= (2*Math.PI);
+    while(outAngle < -Math.PI) outAngle += (2*Math.PI);
+    return outAngle;
+}
+
+function Vec2ToAngle(v) {
+    let angle = Math.atan2(v.y, v.x);
+    if(angle < 0) angle += (2*Math.PI);
+    return angle;
+}
+
+class Player {
+
+    constructor(pos, weapon) {
+        this.pos = pos;
+        this.vel = new Vec2(0, 0);
+
+        this.orientation = 0;
+        this.lastFaceDir = new Vec2(1, 0);
+
+        this.maxLinVel = 400;
+        this.maxAngVel = 30*Math.PI;
+
+
+        this.sprite = new Sprite(this.pos, 50, 50, new Vec4(0.5, 1, 0, 1));
+        this.head = new Sprite(this.pos, 10, 10, new Vec4(1, 0, 1, 1));
+        this.weapon = weapon;
+    }
+
+    Update(dt) {
+
+        let faceDir = new Vec2(0, 0);
+        if(KeyDown(KeyCode.KEY_UP)) {
+            faceDir.y = 1;
+        }
+        if(KeyDown(KeyCode.KEY_DOWN)) {
+            faceDir.y = -1;
+        }
+        if(KeyDown(KeyCode.KEY_LEFT)) {
+            faceDir.x = -1;
+        }
+        if(KeyDown(KeyCode.KEY_RIGHT)) {
+            faceDir.x = 1;
+        }
+
+        if(Vec2Dot(faceDir, faceDir) <= 0.0) {
+            faceDir = this.lastFaceDir;
+        }
+
+        let acc = new Vec2(0, 0);
+        if(KeyDown(KeyCode.KEY_D)) {
+            acc.x += 1;
+        }
+        if(KeyDown(KeyCode.KEY_A)) {
+            acc.x -= 1;
+        }
+        if(KeyDown(KeyCode.KEY_W)) {
+            acc.y += 1;
+        }
+        if(KeyDown(KeyCode.KEY_S)) {
+            acc.y -= 1;
+        }
+
+        if(Vec2Dot(acc, acc) > 0.0) {
+            acc = Vec2MulScalar(Vec2Normalize(acc), 1600);
+        }
+
+
+        let currentOrientation = this.orientation;
+        let targetOrientation = Vec2ToAngle(faceDir);
+        let angularDist = targetOrientation - currentOrientation;
+        angularDist = AdjustAngle(angularDist);
+        let angVel = angularDist / 0.1;
+
+        this.orientation += angVel * dt;
+
+        let dir = new Vec2(Math.cos(this.orientation), Math.sin(this.orientation));
+
+        this.vel = Vec2Add(this.vel, Vec2MulScalar(acc, dt));
+        this.pos = Vec2Add(this.pos, Vec2MulScalar(this.vel, dt));
+
+        let damping = Math.pow(0.003, dt);
+        this.vel = Vec2MulScalar(this.vel, damping);
+
+        this.head.pos = Vec2Add(this.pos, Vec2MulScalar(dir, 25));
+        
+        this.sprite.pos = this.pos;
+        this.sprite.Update(dt);
+        this.head.Update(dt);
+
+        this.weapon.Update(this.pos, dir, dt);
+
+        this.lastFaceDir = faceDir;
+    }
+
+    Render(shader) {
+        this.weapon.Render(shader);
+        this.sprite.Render(shader);
+        this.head.Render(shader);
+
+    }
+
+}
