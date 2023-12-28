@@ -1,0 +1,8 @@
+class Boss {
+    
+    constructor() {
+
+        
+    }
+
+}
