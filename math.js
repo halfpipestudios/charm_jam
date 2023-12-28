@@ -3,6 +3,12 @@ class Vec2 {
         this.x = x;
         this.y = y;
     }
+
+    length() {
+        let result = Math.sqrt(this.x * this.x + this.y * this.y);
+        return result;
+    }
+
 }
 
 class Vec4 {
@@ -70,8 +76,18 @@ function Vec2DivScalar(a, b) {
     return result;
 }
 
+
 function Vec2Dot(a, b) {
     return (a.x * b.x) + (a.y * b.y); 
+}
+
+function Vec2Normalize(a) {
+    let result = new Vec2;
+    let len = Math.sqrt(a.x*a.x + a.y*a.y);
+    result.x = a.x / len;
+    result.y = a.y / len;
+    return result;
+
 }
 
 
