@@ -24,6 +24,8 @@ class Saw {
         this.hitOnce = false;
 
         this.state = SawState.Idle;
+
+        this.sprite = new Sprite(this.pos, 16, 16, new Vec4(0.7, 0.3, 0, 1));
         
     }
 
@@ -42,7 +44,9 @@ class Saw {
     }
 
     Update(dt) {
-    
+        
+        this.start = Vec2Add(this.parent.pos, this.offset);
+
         switch(this.state) {
             case SawState.Idle:
                 this.ProcessIdleState(dt);
@@ -55,16 +59,16 @@ class Saw {
                 break;
         }
 
+        this.sprite.pos = this.pos;
+        this.sprite.Update();
+
     }
 
     Render() {
-        let sprite = new Sprite(this.pos, 16, 16, new Vec4(0.7, 0.3, 0, 1));
-        sprite.Render(g.shader);
+        this.sprite.Render(g.shader);
     }
     
     ProcessIdleState(dt) {
-        // NOTE: When the saw is idle there is no need to update the position
-        this.start = Vec2Add(this.parent.pos, this.offset);
         this.pos = this.start;
 
         let hero = g.hero;

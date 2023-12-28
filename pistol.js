@@ -5,6 +5,50 @@ class Bullet {
         this.sprite = new Sprite(this.pos, 10, 10, new Vec4(1, 1, 1, 1));
     }
 
+    ProcessBossCollision(dt) {
+
+
+            // boss collision
+            
+            let min = Vec2Sub(g.boss.pos, new Vec2(g.boss.sprite.w/2, g.boss.sprite.h/2));
+            let max = Vec2Add(g.boss.pos, new Vec2(g.boss.sprite.w/2, g.boss.sprite.h/2));
+
+            let aabb = new AABB(min, max);
+            let ray = new Ray(this.pos, Vec2Normalize(this.vel));
+
+            let t = IntersectRayAABB(ray, aabb);
+            let d = Vec2MulScalar(this.vel, dt);
+            if(t >= 0 && t*t < Vec2Dot(d, d)) {
+                //g.soundManager.GetSound("hit").Stop();
+                //g.soundManager.GetSound("hit").Play();
+                this.sprite.color = new Vec4(1, 0, 0, 1);
+                let randX = (Math.random() * 2.0 - 1) * 200.0;
+                let randY = (Math.random() * 2.0 - 1) * 200.0;
+                this.vel = new Vec2(randX, randY);
+            }
+
+            // saw collision
+            for(let i = 0; i < g.boss.saws.length; ++i) {
+                let saw = g.boss.saws[i];
+                let min = Vec2Sub(saw.pos, new Vec2(saw.sprite.w/2, saw.sprite.h/2));
+                let max = Vec2Add(saw.pos, new Vec2(saw.sprite.w/2, saw.sprite.h/2));
+    
+                let aabb = new AABB(min, max);
+                let ray = new Ray(this.pos, Vec2Normalize(this.vel));
+    
+                let t = IntersectRayAABB(ray, aabb);
+                let d = Vec2MulScalar(this.vel, dt);
+                if(t >= 0 && t*t < Vec2Dot(d, d)) {
+                    //g.soundManager.GetSound("hit").Stop();
+                    //g.soundManager.GetSound("hit").Play();
+                    this.sprite.color = new Vec4(1, 0, 0, 1);
+                    let randX = (Math.random() * 2.0 - 1) * 200.0;
+                    let randY = (Math.random() * 2.0 - 1) * 200.0;
+                    this.vel = new Vec2(randX, randY);
+                }
+            }
+    }
+
     Update(dt) {
         this.sprite.pos = this.pos;
         this.sprite.Update(dt);
@@ -30,8 +74,8 @@ class Pistol {
     }
 
     Shoot(pos, vel) {
-        g.soundManager.GetSound("shoot").Stop();
-        g.soundManager.GetSound("shoot").Play();
+        //g.soundManager.GetSound("shoot").Stop();
+        //g.soundManager.GetSound("shoot").Play();
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
         this.bullets[this.currentBullet].sprite.color = new Vec4(0, 1, 0, 1);
@@ -49,28 +93,14 @@ class Pistol {
            KeyDown(KeyCode.KEY_LEFT) ||
            KeyDown(KeyCode.KEY_RIGHT)) {
         
-            if(this.timer >= 0.1) {
+            if(this.timer >= 0.01) {
                 this.Shoot(pos, Vec2MulScalar(dir, 800));
                 this.timer = 0.0
             } 
         }
 
         for(let i = 0; i < this.bulletCount; ++i) {
-
-            // collision test
-            let aabb = new AABB(new Vec2(220, 350), new Vec2(420, 450));
-            let ray = new Ray(this.bullets[i].pos, Vec2Normalize(this.bullets[i].vel));
-            let t = IntersectRayAABB(ray, aabb);
-            let d = Vec2MulScalar(this.bullets[i].vel, dt);
-            if(t >= 0 && t*t < Vec2Dot(d, d)) {
-                g.soundManager.GetSound("hit").Stop();
-                g.soundManager.GetSound("hit").Play();
-                this.bullets[i].sprite.color = new Vec4(1, 0, 0, 1);
-                let randX = Math.random() * 2.0 - 1;
-                let randY = Math.random() * 2.0 - 1;
-                this.bullets[i].vel = Vec2MulScalar(this.bullets[i].vel, -0.2);
-            }
-
+            this.bullets[i].ProcessBossCollision(dt);
             this.bullets[i].pos = Vec2Add(this.bullets[i].pos, Vec2MulScalar(this.bullets[i].vel, dt));
             this.bullets[i].Update(dt);
         }

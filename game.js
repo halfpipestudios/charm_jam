@@ -3,10 +3,8 @@ var g = {
     shader : new Shader(),
     soundManager : new SoundManager(),
 
-    boss : new Boss(),
-    
+    boss : null,
     player : null,
-    enemy : null
 
 }
 
@@ -18,7 +16,7 @@ function InitGlobals() {
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
-    g.enemy = new Sprite(new Vec2(320, 400), 200, 100, new Vec4(1.0, 0.5, 0, 1));
+    g.boss = new Boss();
 }
 
 class Game {
@@ -40,16 +38,12 @@ class Game {
 
     Update(deltaTime) {
         g.player.Update(deltaTime);
-        g.enemy.Update(deltaTime);
-
         g.boss.Update(deltaTime);
 
     }
 
     Render() {
-        g.enemy.Render(g.shader);
         g.player.Render(g.shader);
-
         g.boss.Render();
     }
 

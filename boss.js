@@ -2,7 +2,8 @@ class Boss {
     
     constructor() {
         
-        this.pos = new Vec2(600, 600);
+        this.pos = new Vec2(1280/2, 580);
+        this.sprite = new Sprite(this.pos, 32, 32, new Vec4(1, 0, 0, 1));
 
         this.saws = [new Saw(this, new Vec2(-160, 0)),
                      new Saw(this, new Vec2(-128, 0)),
@@ -17,12 +18,20 @@ class Boss {
         this.minShotSpeed = 700;
         this.maxShotSpeed = 800;
         this.minTimeBetweenShots = 0.6;
-        this.currentTime = 0;
-            
+        this.currentTime = 0;  
+        
+        this.timer = 0;
     }
 
     Update(dt) {
 
+        this.timer += dt*0.5;
+
+        let xOffset = Math.cos(this.timer) * 300;
+        let yOffset = Math.sin (this.timer) * 100;
+
+        this.pos = new Vec2(1280/2 + xOffset, 720*(3/4) + yOffset);
+        
         if(this.currentTime >= this.minTimeBetweenShots) {
             let index = this.FindSawToShot();
             if(index > -1) {
@@ -41,12 +50,14 @@ class Boss {
             this.saws[i].Update(dt);
         }
 
+        this.sprite.pos = this.pos;
+        this.sprite.Update();
+
     }
 
     Render() {
         
-        let sprite = new Sprite(this.pos, 32, 32, new Vec4(1, 0, 0, 1));
-        sprite.Render(g.shader);
+        this.sprite.Render(g.shader);
 
         for(let i = 0; i < this.saws.length; ++i) {
             this.saws[i].Render();

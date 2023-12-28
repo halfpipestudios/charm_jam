@@ -16,17 +16,14 @@ class Player {
     constructor(pos, weapon) {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
-
         this.orientation = 0;
-        this.lastFaceDir = new Vec2(1, 0);
-
-        this.maxLinVel = 400;
-        this.maxAngVel = 30*Math.PI;
-
 
         this.sprite = new Sprite(this.pos, 50, 50, new Vec4(0.5, 1, 0, 1));
-        this.head = new Sprite(this.pos, 10, 10, new Vec4(1, 0, 1, 1));
         this.weapon = weapon;
+
+        this.lastFaceDir = new Vec2(1, 0);
+        this.head = new Sprite(this.pos, 10, 10, new Vec4(1, 0, 1, 1));
+
     }
 
     Update(dt) {
@@ -66,7 +63,6 @@ class Player {
         if(Vec2Dot(acc, acc) > 0.0) {
             acc = Vec2MulScalar(Vec2Normalize(acc), 1600);
         }
-
 
         let currentOrientation = this.orientation;
         let targetOrientation = Vec2ToAngle(faceDir);
