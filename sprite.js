@@ -36,6 +36,13 @@ class Sprite {
 
     }
 
+    GetAABB() {
+        let min = Vec2Sub(this.pos, new Vec2(this.w/2, this.h/2));
+        let max = Vec2Add(this.pos, new Vec2(this.w/2, this.h/2));
+        let aabb = new AABB(min, max);
+        return aabb;
+    }
+
 }
 
 

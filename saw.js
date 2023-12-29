@@ -7,7 +7,7 @@ const SawState = {
 
 class Saw {
 
-    constructor(parent, offset) {
+    constructor(parent, radius, offset) {
 
         this.parent = parent;
         this.offset = offset;
@@ -26,8 +26,11 @@ class Saw {
 
         this.state = SawState.Idle;
 
-        this.sprite = new Sprite(this.pos,32, 32, new Vec4(0.7, 0.3, 0, 1));
+        this.radius = radius;
+        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.gray1);
         
+        this.health = 100;
+        this.charming = false;
     }
 
     Shot(target, speed) {
@@ -74,11 +77,10 @@ class Saw {
     ProcessIdleState(dt) {
         this.pos = this.start;
 
-        let hero = g.hero;
-        //if(!this.hitOnce && TestCircleAABB(this.GetCircle(), hero.GetAABB())) {   
-            // TODO: reduce hero health!!!!
-        //    this.hitOnce = true;
-        //}
+        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB())) {   
+            g.player.DecreaseHealth(1);
+            this.hitOnce = true;
+        }
 
     }
 
@@ -96,11 +98,11 @@ class Saw {
         this.pos = Vec2Add(this.shotPos, Vec2MulScalar(dir, this.speed * this.currentTime));
         this.currentTime += dt;
 
-        let hero = g.hero;
-        //if(!hitOnce && TestCircleAABB(this.GetCircle(), hero.GetAABB())) {   
-            // TODO: reduce hero health!!!!
-        //    this.hitOnce = true;
-        //}
+        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB())) {   
+            g.player.DecreaseHealth(1);
+            this.hitOnce = true;
+        }
+    
     }
 
     ProcessReturningState(dt) {
@@ -128,5 +130,17 @@ class Saw {
         return result;
     }
 
+    DecreaseHealth(amount) {
+        this.health = Math.max(this.health - amount, 0);
+        if(this.health == 0) {
+            this.charming = true;
+            this.sprite.color = c.green;
+        }
+    }
+
+    GetCircle() {
+        let result = new Circle(this.pos, this.radius);
+        return result;
+    }
 
 }

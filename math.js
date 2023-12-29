@@ -1,3 +1,8 @@
+function Lerp(des, src, t) {
+    let result = (des * (1-t)) + (src * t);
+    return result;
+}
+
 class Vec2 {
     constructor(x, y) {
         this.x = x;
@@ -18,6 +23,15 @@ class Vec4 {
         this.z = z;
         this.w = w;
     }
+}
+
+function Vec4Lerp(des, src, t) {
+    let result = new Vec4;
+    result.x = Lerp(des.x, src.x, t);
+    result.y = Lerp(des.y, src.y, t);
+    result.z = Lerp(des.z, src.z, t);
+    result.w = Lerp(des.w, src.w, t);
+    return result;
 }
 
 function Vec2Add(a, b) {

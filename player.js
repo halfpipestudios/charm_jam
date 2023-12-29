@@ -18,11 +18,20 @@ class Player {
         this.vel = new Vec2(0, 0);
         this.orientation = 0;
 
-        this.sprite = new Sprite(this.pos, 50, 50, new Vec4(0.5, 1, 0, 1));
+        this.sprite = new Sprite(this.pos, 50, 50, c.green1);
         this.weapon = weapon;
 
         this.lastFaceDir = new Vec2(1, 0);
         this.head = new Sprite(this.pos, 10, 10, new Vec4(1, 0, 1, 1));
+
+        this.health = 4;
+
+        this.damageAnimationEnable      = false;
+        this.damageAnimationDuration    = 1;
+        this.damageAnimationCurrentTime = 0;
+        this.dameAnimationSrcColor      = c.green1;
+        this.dameAnimationDesColor      = c.red;
+
 
     }
 
@@ -89,13 +98,39 @@ class Player {
         this.weapon.Update(this.pos, dir, dt);
 
         this.lastFaceDir = faceDir;
+
+        this.UpdateDamageAnimation(dt);
     }
 
     Render(shader) {
         this.weapon.Render(shader);
         this.sprite.Render(shader);
         this.head.Render(shader);
+    }
 
+    DecreaseHealth(amount) {
+        if(this.damageAnimationEnable) return;
+        this.health = Math.max(this.health - amount, 0);
+        this.PlayDamageAnimation();
+    }
+
+    PlayDamageAnimation()  {
+        this.damageAnimationEnable = true;
+        this.damageAnimationCurrentTime = 0;
+    }
+
+    UpdateDamageAnimation(dt) {
+        if(!this.damageAnimationEnable) return;
+
+        if(this.damageAnimationCurrentTime > this.damageAnimationDuration) {
+            this.sprite.color = this.dameAnimationSrcColor;
+            this.damageAnimationEnable = false;
+            return;
+        }
+
+        let t = (Math.sin(this.damageAnimationCurrentTime * 100) + 1) / 2;
+        this.sprite.color = Vec4Lerp(this.dameAnimationSrcColor, this.dameAnimationDesColor, t);
+        this.damageAnimationCurrentTime += dt;
     }
 
 }
