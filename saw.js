@@ -14,6 +14,7 @@ class Saw {
         
         this.start = Vec2Add(this.parent.pos, this.offset);
         this.end = new Vec2;
+        this.shotPos = new Vec2;
         
         this.pos = this.start;
 
@@ -39,6 +40,8 @@ class Saw {
         this.end.x = target.x;
         this.end.y = target.y;
         
+        this.shotPos = this.pos;
+
         this.currentTime = 0;
         this.enableTime = Vec2Sub(this.end, this.start).length() / this.speed;
     }
@@ -89,8 +92,8 @@ class Saw {
             return;
         }
         
-        let dir = Vec2Normalize(Vec2Sub(this.end, this.start));
-        this.pos = Vec2Add(this.start, Vec2MulScalar(dir, this.speed * this.currentTime));
+        let dir = Vec2Normalize(Vec2Sub(this.end, this.shotPos));
+        this.pos = Vec2Add(this.shotPos, Vec2MulScalar(dir, this.speed * this.currentTime));
         this.currentTime += dt;
 
         let hero = g.hero;
