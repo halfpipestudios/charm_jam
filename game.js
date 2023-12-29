@@ -5,6 +5,7 @@ var g = {
 
     boss : null,
     player : null,
+    snakeBoss: null
 
 }
 
@@ -17,6 +18,7 @@ function InitGlobals() {
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
+    g.snakeBoss = new SnakeBoss(new Vec2(1280/2, 100));
 }
 
 class Game {
@@ -28,7 +30,9 @@ class Game {
         var clientRect = canvas.getBoundingClientRect();
 
         let identity = new Mat4;
-        let ortho = Mat4Orthographic(0, clientRect.right - clientRect.left, 0, clientRect.bottom - clientRect.top, 0, -100.0);
+        let ortho = Mat4Orthographic(0, clientRect.right - clientRect.left,
+                                     0, clientRect.bottom - clientRect.top,
+                                     0, -100.0);
 
         g.shader.Bind();
         gl.uniformMatrix4fv(g.shader.GetUniformLocation("Model"), false, identity.m);
@@ -38,13 +42,15 @@ class Game {
 
     Update(deltaTime) {
         g.player.Update(deltaTime);
-        g.boss.Update(deltaTime);
+        //g.boss.Update(deltaTime);
+        g.snakeBoss.Update(g.player.pos, deltaTime);
 
     }
 
     Render() {
         g.player.Render(g.shader);
-        g.boss.Render();
+        //g.boss.Render();
+        g.snakeBoss.Render(g.shader);
     }
 
 }

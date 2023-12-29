@@ -1,16 +1,3 @@
- function AdjustAngle(angle) {
-    let outAngle = angle;
-    while(outAngle >  Math.PI) outAngle -= (2*Math.PI);
-    while(outAngle < -Math.PI) outAngle += (2*Math.PI);
-    return outAngle;
-}
-
-function Vec2ToAngle(v) {
-    let angle = Math.atan2(v.y, v.x);
-    if(angle < 0) angle += (2*Math.PI);
-    return angle;
-}
-
 class Player {
 
     constructor(pos, weapon) {
