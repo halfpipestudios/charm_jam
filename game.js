@@ -44,6 +44,7 @@ function InitGlobals() {
     g.textureManager.AddTexture("life", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/life.png");
     g.textureManager.AddTexture("tuto", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto.png");
     g.textureManager.AddTexture("tuto2", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto2.png");
+    g.textureManager.AddTexture("tuto3", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto3.png");
     
     g.camera = new Camera();
 
