@@ -196,6 +196,17 @@ function Mat4Scale(x, y, z) {
     return m;
 }
 
+function Mat4RotateZ(angle) {
+    let m = new Mat4;
+    m.m = [
+        Math.cos(angle), -Math.sin(angle), 0, 0,
+        Math.sin(angle),  Math.cos(angle), 0, 0,
+                  0,            0, 1, 0,
+                  0,            0, 0, 1
+    ];
+    return m;
+}
+
 function Mat4Orthographic(l, r, b, t, n, f) {
     let m = new Mat4;
     m.m = [

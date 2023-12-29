@@ -2,11 +2,12 @@ class Sprite {
 
     constructor(pos, w, h, color) {
         this.pos = pos;
+        this.rotation = 0;
         this.w = w;
         this.h = h;
         this.color = color;
         // TODO: set this matrix to represent the scale and position of the sprite
-        this.model = Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1));
+        this.model = Mat4Mul(Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1)), Mat4RotateZ(this.rotation));
 
         let verticesTexCoords = new Float32Array([
             -0.5, 0.5, 0.0, 1.0,
@@ -31,7 +32,7 @@ class Sprite {
     }
 
     Update(dt) {
-        this.model = Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1));
+        this.model = Mat4Mul(Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1)), Mat4RotateZ(this.rotation));
     }
 
     Render(shader) {
