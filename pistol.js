@@ -2,7 +2,7 @@ class Bullet {
     constructor(pos) {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
-        this.sprite = new Sprite(this.pos, 10, 10, new Vec4(1, 1, 1, 1));
+        this.sprite = new Sprite(this.pos, 20, 20, new Vec4(1, 1, 1, 1));
         this.firstCollision = true;
         
         this.damage = 10;
@@ -14,11 +14,8 @@ class Bullet {
         for(let i = 0; i < g.snakeBoss.nodes.length; ++i) {
             let pos = g.snakeBoss.nodes[i].pos;
             let sprite = g.snakeBoss.sprite;
-            let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
-            let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
-            let aabb = new AABB(min, max);
-
-            let t = IntersectRayAABB(ray, aabb);
+            let circle = new Circle(pos, sprite.w*0.45);
+            let t = IntersectRayCircle(ray, circle);
             let d = Vec2MulScalar(this.vel, dt);
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
                 this.sprite.color = new Vec4(1, 0, 0, 1);
@@ -60,7 +57,7 @@ class Bullet {
             let saw = g.boss.saws[i];
 
             let ray = new Ray(this.pos, Vec2Normalize(this.vel));
-            let t = IntersectRayAABB(ray, saw.sprite.GetAABB());
+            let t = IntersectRayCircle(ray, saw.GetCircle());
             let d = Vec2MulScalar(this.vel, dt);
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
                 //g.soundManager.GetSound("hit").Stop();

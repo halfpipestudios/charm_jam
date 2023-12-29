@@ -88,11 +88,8 @@ class SnakeBoss {
             if(this.nodes[i].alive || i == 0) {
                 let pos = this.nodes[i].pos;
                 let sprite = this.sprite;
-                let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
-                let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
-                let aabb = new AABB(min, max);
-
-                if(TestAABBAABB(aabb, g.player.sprite.GetAABB())) {   
+                let circle = new Circle(pos, sprite.w*0.45);
+                if(TestCircleCircle(circle, g.player.GetCircle())) {   
                     g.player.DecreaseHealth(1);
                 }
             }

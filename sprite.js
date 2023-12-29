@@ -51,7 +51,6 @@ class Sprite {
         let aabb = new AABB(min, max);
         return aabb;
     }
-
 }
 
 

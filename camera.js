@@ -38,10 +38,6 @@ class Camera {
 
             this.pos.x = Lerp(this.screenShakeSamplesX[prevSampleIndex]*this.screenShakeAmplitude/2, this.screenShakeSamplesX[nextSampleIndex]*this.screenShakeAmplitude/2, progression);
             this.pos.y = Lerp(this.screenShakeSamplesY[prevSampleIndex]*this.screenShakeAmplitude/2, this.screenShakeSamplesY[nextSampleIndex]*this.screenShakeAmplitude/2, progression);
-            
-            console.log(prevSampleIndex);
-            console.log(nextSampleIndex);
-            console.log(progression);
 
             this.screenShakeTime += dt;
         }

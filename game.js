@@ -37,8 +37,7 @@ function InitGlobals() {
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
-   g.textureManager.AddTexture("bullet0", "https://cdn.discordapp.com/attachments/344240748473876490/1190392762101674044/bullet0.png");
-   g.textureManager.AddTexture("bullet", "https://cdn.discordapp.com/attachments/344240748473876490/1190392747056693368/bullet.png");
+   g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet.png");
     
    g.camera = new Camera();
 

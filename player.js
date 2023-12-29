@@ -4,7 +4,7 @@ class Player {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
         this.orientation = 0;
-
+        this.radius = 25;
         this.sprite = new Sprite(this.pos, 50, 50, c.green1);
         this.weapon = weapon;
 
@@ -129,6 +129,11 @@ class Player {
         let t = (Math.sin(this.damageAnimationCurrentTime * 100) + 1) / 2;
         this.sprite.color = Vec4Lerp(this.dameAnimationSrcColor, this.dameAnimationDesColor, t);
         this.damageAnimationCurrentTime += dt;
+    }
+
+    GetCircle() {
+        let circle = new Circle(this.pos, this.radius);
+        return circle;
     }
 
 }

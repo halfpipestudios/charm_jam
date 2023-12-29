@@ -70,9 +70,9 @@ function TestCircleAABB(c, b) {
 function IntersectRayCircle(r, s) {
     let t = -1.0;
 
-    let m = r.o - s.c;
+    let m = Vec2Sub(r.o, s.c);
     let b = Vec2Dot(m, r.d);
-    let c = Vec2Dot(m, m) - s.r *s.r;
+    let c = Vec2Dot(m, m) - s.r*s.r;
     
     if(c > 0.0 && b > 0.0) return t;
 
