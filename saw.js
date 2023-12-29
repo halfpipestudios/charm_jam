@@ -25,7 +25,7 @@ class Saw {
 
         this.state = SawState.Idle;
 
-        this.sprite = new Sprite(this.pos, 16, 16, new Vec4(0.7, 0.3, 0, 1));
+        this.sprite = new Sprite(this.pos,32, 32, new Vec4(0.7, 0.3, 0, 1));
         
     }
 
@@ -84,6 +84,7 @@ class Saw {
         if(this.currentTime > this.enableTime) {
             this.currentTime = 0;
             this.enableTime = 0;
+            this.end = this.pos;
             this.state = SawState.Returning;
             return;
         }
@@ -109,9 +110,13 @@ class Saw {
         }
 
         let dir = Vec2Sub(this.start, this.end);
-        this.pos = Vec2Add(this.end, Vec2MulScalar(dir, this.currentTime));
+        this.pos = Vec2Add(this.end, Vec2MulScalar(dir, this.EaseInOutQuad(this.currentTime)));
         this.currentTime += dt * 1;
 
+    }
+
+    EaseInOutQuad(x) {
+        return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
     }
 
     CalculateTragetFromPlayer(dt) {
