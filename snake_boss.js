@@ -52,8 +52,24 @@ class SnakeBoss {
                 break;
         }
         this.ProcessSnakeBody();
+        this.ProcessDamageToPlayer(dt);
 
         this.timer += dt;
+    }
+
+    ProcessDamageToPlayer(dt) {
+        for(let i = 0; i < this.nodes.length; ++i) {
+            let pos = this.nodes[i];
+            let sprite = this.sprite;
+            let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
+            let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
+            let aabb = new AABB(min, max);
+
+            if(TestAABBAABB(aabb, g.player.sprite.GetAABB())) {   
+                g.player.DecreaseHealth(1);
+            }
+
+        }
     }
 
     Render(shader) {

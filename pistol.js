@@ -3,6 +3,10 @@ class Bullet {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
         this.sprite = new Sprite(this.pos, 10, 10, new Vec4(1, 1, 1, 1));
+        this.firstCollision = true;
+        
+        this.damage = 10;
+    
     }
 
     ProcessSnakeBossCollision(dt) {
@@ -27,44 +31,42 @@ class Bullet {
     }
 
     ProcessBossCollision(dt) {
-        // boss collision
-        let min = Vec2Sub(g.boss.pos, new Vec2(g.boss.sprite.w/2, g.boss.sprite.h/2));
-        let max = Vec2Add(g.boss.pos, new Vec2(g.boss.sprite.w/2, g.boss.sprite.h/2));
-
-        let aabb = new AABB(min, max);
+        // boss collision            
         let ray = new Ray(this.pos, Vec2Normalize(this.vel));
 
-        let t = IntersectRayAABB(ray, aabb);
+        let t = IntersectRayAABB(ray, g.boss.sprite.GetAABB());
         let d = Vec2MulScalar(this.vel, dt);
         if(t >= 0 && t*t < Vec2Dot(d, d)) {
             this.sprite.color = new Vec4(1, 0, 0, 1);
             let randX = (Math.random() * 2.0 - 1) * 200.0;
             let randY = (Math.random() * 2.0 - 1) * 200.0;
             this.vel = new Vec2(randX, randY);
+            
+            if(this.firstCollision) {
+                this.firstCollision = false;
+            }
+            
         }
 
         // saw collision
         for(let i = 0; i < g.boss.saws.length; ++i) {
             let saw = g.boss.saws[i];
-            
-            // TODO: is this good??
-            if(saw.state !== SawState.Idle) {
-                continue;
-            }
 
-            let min = Vec2Sub(saw.pos, new Vec2(saw.sprite.w/2, saw.sprite.h/2));
-            let max = Vec2Add(saw.pos, new Vec2(saw.sprite.w/2, saw.sprite.h/2));
-
-            let aabb = new AABB(min, max);
             let ray = new Ray(this.pos, Vec2Normalize(this.vel));
-
-            let t = IntersectRayAABB(ray, aabb);
+            let t = IntersectRayAABB(ray, saw.sprite.GetAABB());
             let d = Vec2MulScalar(this.vel, dt);
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
+                //g.soundManager.GetSound("hit").Stop();
+                //g.soundManager.GetSound("hit").Play();
                 this.sprite.color = new Vec4(1, 0, 0, 1);
                 let randX = (Math.random() * 2.0 - 1) * 200.0;
                 let randY = (Math.random() * 2.0 - 1) * 200.0;
                 this.vel = new Vec2(randX, randY);
+
+                if(this.firstCollision) {
+                    saw.DecreaseHealth(this.damage);
+                    this.firstCollision = false;
+                }
             }
         }
     }
@@ -97,6 +99,7 @@ class Pistol {
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
         this.bullets[this.currentBullet].sprite.color = new Vec4(0, 1, 0, 1);
+        this.bullets[this.currentBullet].firstCollision = true;
         this.currentBullet++;
         if(this.currentBullet >= this.bulletCount) {
             this.currentBullet = 0;

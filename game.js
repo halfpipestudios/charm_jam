@@ -1,11 +1,25 @@
+var c = {
+    gray1:  new Vec4(124/255, 124/255, 124/255, 1),
+    gray2:  new Vec4(64/255, 64/255, 64/255, 1),
+    green:  new Vec4(0, 1, 0, 1),
+    green1: new Vec4(0.5, 1, 0, 1),
+    red:    new Vec4(1, 0, 0, 1),
+
+}
+
 var g = {
+
+    window_w : 1280,
+    window_h : 720,
 
     shader : new Shader(),
     soundManager : new SoundManager(),
 
     boss : null,
     player : null,
-    snakeBoss: null
+    snakeBoss: null,
+
+    ui : null,
 
 }
 
@@ -19,6 +33,8 @@ function InitGlobals() {
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
     g.snakeBoss = new SnakeBoss(new Vec2(1280/2, 100));
+
+    g.ui = new Ui();
 }
 
 class Game {
@@ -42,15 +58,17 @@ class Game {
 
     Update(deltaTime) {
         g.player.Update(deltaTime);
-        //g.boss.Update(deltaTime);
         g.snakeBoss.Update(g.player.pos, deltaTime);
 
+        //g.boss.Update(deltaTime);
+        g.ui.Update(deltaTime);
     }
 
     Render() {
         g.player.Render(g.shader);
-        //g.boss.Render();
         g.snakeBoss.Render(g.shader);
+        //g.boss.Render();
+        g.ui.Render();
     }
 
 }

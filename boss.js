@@ -3,21 +3,25 @@ class Boss {
     constructor() {
         
         this.pos = new Vec2(1280/2, 580);
-        this.sprite = new Sprite(this.pos, 32, 32, new Vec4(1, 0, 0, 1));
+        this.radius = 48;
+        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.gray2);
 
-        this.saws = [new Saw(this, new Vec2(-160, 0)),
-                     new Saw(this, new Vec2(-128, 0)),
-                     new Saw(this, new Vec2(-96, 0)),
-                     new Saw(this, new Vec2(-64, 0)),
-                     new Saw(this, new Vec2( 64, 0)),
-                     new Saw(this, new Vec2( 96, 0)),
-                     new Saw(this, new Vec2( 128, 0)),
-                     new Saw(this, new Vec2( 160, 0))];
+        let sawRadius = 32;
+        let padding = 28;
+        this.saws = [new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*1+padding*1, 0)),
+                     new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*3+padding*2, 0)),
+                     new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*5+padding*3, 0)),
+                     new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*7+padding*4, 0)),
+
+                     new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*1+padding*1), 0)),
+                     new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*3+padding*2), 0)),
+                     new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*5+padding*3), 0)),
+                     new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*7+padding*4), 0))];
     
 
-        this.minShotSpeed = 700;
-        this.maxShotSpeed = 800;
-        this.minTimeBetweenShots = 0.6;
+        this.minShotSpeed = 600;
+        this.maxShotSpeed = 700;
+        this.minTimeBetweenShots = 2.0;
         this.currentTime = 0;  
         
         this.timer = 0;
@@ -67,14 +71,11 @@ class Boss {
     FindSawToShot() {
         let count = 0;
         let index = Math.floor(Math.random() * this.saws.length);
-        while(this.saws[index].state != SawState.Idle) {
+        while(this.saws[index].state != SawState.Idle || this.saws[index].charming == true) {
             if(count == 4) return -1;
             index = (index + 1) % this.saws.length;
             count += 1;
         }
-
-        if(index < 0) return 0;
-        if(index >=this.saws.length) return this.saws.length - 1;
 
         return index;
     }
