@@ -14,6 +14,7 @@ var g = {
 
     shader : new Shader(),
     soundManager : new SoundManager(),
+    textureManager: new TextureManager(),
 
     boss : null,
     player : null,
@@ -33,6 +34,8 @@ function InitGlobals() {
     g.soundManager.AddSound("cave", "./assets/sound.wav", true);
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
+
+    g.textureManager.AddTexture("bullet", "./assets/bullet.png");
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
@@ -79,9 +82,6 @@ class Game {
 
         InitGlobals();
 
-        let canvas = document.getElementById("glcanvas");
-        var clientRect = canvas.getBoundingClientRect();
-
         let identity = new Mat4;
         let ortho = Mat4Orthographic(0, g.window_w,
                                      0, g.window_h,
@@ -96,15 +96,6 @@ class Game {
 
     Update(deltaTime) {
         g.timer += deltaTime;
-        let scale = (Math.cos(g.timer*4) + 1) / 2;
-
-        let ortho = Mat4Orthographic(
-            0, g.window_w + scale * 1000,
-            0, g.window_h + scale * 1000,
-            0.0, 100.0);
-        gl.uniformMatrix4fv(g.shader.GetUniformLocation("Proj"), false, ortho.m);
-
-
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:
                 if(KeyJustDown(KeyCode.KEY_1)) {

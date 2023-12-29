@@ -12,7 +12,7 @@ class Bullet {
     ProcessSnakeBossCollision(dt) {
         let ray = new Ray(this.pos, Vec2Normalize(this.vel));
         for(let i = 0; i < g.snakeBoss.nodes.length; ++i) {
-            let pos = g.snakeBoss.nodes[i];
+            let pos = g.snakeBoss.nodes[i].pos;
             let sprite = g.snakeBoss.sprite;
             let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
             let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
@@ -25,6 +25,13 @@ class Bullet {
                 let randX = (Math.random() * 2.0 - 1) * 200.0;
                 let randY = (Math.random() * 2.0 - 1) * 200.0;
                 this.vel = new Vec2(randX, randY);
+                if(this.firstCollision) {
+                    g.snakeBoss.nodes[i].life--;
+                    if(g.snakeBoss.nodes[i].life < 0) {
+                        g.snakeBoss.nodes[i].life = 0;
+                    }
+                    this.firstCollision = false;
+                }
             }
 
         }

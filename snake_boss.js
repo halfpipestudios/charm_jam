@@ -7,29 +7,44 @@ const SnakeBossState = {
 
 class SnakeBoss {
 
-    nodes = [];
+    
 
     constructor() {
+        this.nodes = [];
+        this.nodeCount = 50;
+        this.nodeDistance = 30;
+
         this.Reset();
         
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
 
-        this.nodeCount = 50;
-        this.nodeDistance = 30;
         this.sprite = new Sprite(this.pos, 50, 50, new Vec4(1, 1, 0, 1));
 
         this.state = SnakeBossState.Rest;
         this.timer = 0;
-        
 
- 
     }
 
     Update(target, dt) {
-        let tar = new Vec2(target.x, target.y);
 
+        let snakeWasKill = 0;
+        for(let i = 0; i < this.nodeCount; ++i) {
+            if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
+                g.snakeBoss.nodes[i].color = new Vec4(0, 1, 0, 1);
+                g.snakeBoss.nodes[i].alive = false;
+            }
+            if(!g.snakeBoss.nodes[i].life) {
+                snakeWasKill++;
+            }
+        }
+
+        if(snakeWasKill === this.nodeCount) {
+            g.gameStateManager.PopState();
+        }
+ 
+        let tar = new Vec2(target.x, target.y);
         switch(this.state) {
             case SnakeBossState.Attack:
                 this.ProcessSnakeAttackState(tar, dt);
@@ -51,36 +66,43 @@ class SnakeBoss {
     }
 
     Reset() {
+        this.nodes = [];
         this.pos = new Vec2(1280/2, 720)
         this.orientation = 0;
         this.linVel = 0;
         this.angVel = 0;
         let currentPos = new Vec2(this.pos.x, this.pos.y);
         for(let i = 0; i < this.nodeCount; ++i) {
-            this.nodes[i] = new Vec2(currentPos.x, currentPos.y);
+            this.nodes.push({
+                 pos: new Vec2(currentPos.x, currentPos.y),
+                 color: new Vec4(1, 1, 0, 1),
+                 life: 1,
+                 alive: true});
             currentPos.y += this.nodeDistance;
         }
+        let stop = 0;
     }
 
     ProcessDamageToPlayer(dt) {
         for(let i = 0; i < this.nodes.length; ++i) {
-            let pos = this.nodes[i];
-            let sprite = this.sprite;
-            let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
-            let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
-            let aabb = new AABB(min, max);
+            if(this.nodes[i].alive || i == 0) {
+                let pos = this.nodes[i].pos;
+                let sprite = this.sprite;
+                let min = Vec2Sub(pos, new Vec2(sprite.w/2, sprite.h/2));
+                let max = Vec2Add(pos, new Vec2(sprite.w/2, sprite.h/2));
+                let aabb = new AABB(min, max);
 
-            if(TestAABBAABB(aabb, g.player.sprite.GetAABB())) {   
-                g.player.DecreaseHealth(1);
+                if(TestAABBAABB(aabb, g.player.sprite.GetAABB())) {   
+                    g.player.DecreaseHealth(1);
+                }
             }
-
         }
     }
 
     Render(shader) {
         for(let i = 0; i < this.nodeCount; ++i) {
-            let pos = this.nodes[i];
-            this.sprite.pos = pos;
+            this.sprite.pos = this.nodes[i].pos;
+            this.sprite.color = this.nodes[i].color;
             this.sprite.Update(0.016);
             this.sprite.Render(shader);
         }
@@ -149,12 +171,12 @@ class SnakeBoss {
 
 
     ProcessSnakeBody() {
-        this.nodes[0] = this.pos;
+        this.nodes[0].pos = this.pos;
         for(let i = 1; i < this.nodeCount; ++i) {
-            let toMe = Vec2Sub(this.nodes[i], this.nodes[i - 1]);
+            let toMe = Vec2Sub(this.nodes[i].pos, this.nodes[i - 1].pos);
             let sqDist = Vec2Dot(toMe, toMe);
-            let newPos = Vec2Add(this.nodes[i - 1], Vec2MulScalar(Vec2Normalize(toMe), this.nodeDistance));
-            this.nodes[i] = newPos;
+            let newPos = Vec2Add(this.nodes[i - 1].pos, Vec2MulScalar(Vec2Normalize(toMe), this.nodeDistance));
+            this.nodes[i].pos = newPos;
         }
     }
 
