@@ -16,6 +16,19 @@ class Vec2 {
 
 }
 
+class Vec3 {
+    constructor(x, y, z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    length() {
+        let result = Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+        return result;
+    }
+}
+
 class Vec4 {
     constructor(x, y, z, w) {
         this.x = x;
@@ -104,6 +117,51 @@ function Vec2Normalize(a) {
 
 }
 
+function Vec3Normalize(a) {
+    let result = new Vec3;
+    let len = a.length();
+    result.x = a.x / len;
+    result.y = a.y / len;
+    result.z = a.z / len;
+    return result;
+}
+
+function Vec3Cross(a, b) {
+    return new Vec3(
+        a.y * b.z - a.z * b.y,      
+        a.z * b.x - a.x * b.z,      
+        a.x * b.y - a.y * b.x
+    );
+}
+
+function Vec3Dot(a, b) {
+    return (a.x * b.x) + (a.y * b.y) + (a.z * b.z); 
+}
+
+function Vec3Add(a, b) {
+    let result = new Vec3;
+    result.x = a.x + b.x;
+    result.y = a.y + b.y;
+    result.z = a.z + b.z;
+    return result;
+}
+
+function Vec3MulScalar(a, b) {
+    let result = new Vec2;
+    result.x = a.x * b;
+    result.y = a.y * b;
+    result.z = a.z * b;
+    return result;
+}
+
+function Vec3Sub(a, b) {
+    let result = new Vec3;
+    result.x = a.x - b.x;
+    result.y = a.y - b.y;
+    result.z = a.z - b.z;
+    return result;
+}
+
 
 class Mat4 {
     constructor() {
@@ -141,13 +199,30 @@ function Mat4Scale(x, y, z) {
 function Mat4Orthographic(l, r, b, t, n, f) {
     let m = new Mat4;
     m.m = [
-        2.0 / (r - l), 0, 0, 0,
-        0, 2.0 / (t - b), 0, 0,
-        0, 0, -2.0 / (f - n), 0,
-        -((r + l) / (r - l)), -((t + b) / (t - b)), -((f + n) / (f - n)), 1
+        2.0 / (r - l),
+        0,
+        0,
+        0,
+
+        0,
+        2.0 / (t - b),
+        0,
+        0,
+
+        0,
+        0,
+        -2.0 / (f - n),
+        0,
+
+        -((r + l) / (r - l)),
+        -((t + b) / (t - b)),
+        -((f + n) / (f - n)),
+        1
     ];
     return m;
 }
+
+
 
 function Mat4Mul(a, b) {
     let m = new Mat4;
@@ -164,3 +239,28 @@ function Mat4Mul(a, b) {
 
     return m;
 }
+
+function Mat4LookAt(position, target, up) {
+        // Remember, forward is negative z
+        let f = Vec3Normalize(Vec3Sub(position, target));
+        let r = Vec3Cross(f, up);
+        if (r.length() === 0.0) {
+            return {}; // Error
+        }
+        r = Vec3Normalize(r);
+        let u = Vec3Normalize(Vec3Cross(r, f));
+        let t = new Vec3(
+                Vec3MulScalar(Vec3Dot(r, position), -1.0),
+                Vec3MulScalar(Vec3Dot(u, position), -1.0),
+                Vec3MulScalar(Vec3Dot(f, position), -1.0)
+        );
+        let m = new Mat4;
+        m.m = [
+                // Transpose upper 3x3 matrix to invert it
+                r.x, u.x, f.x, 0,
+                r.y, u.y, f.y, 0,
+                r.z, u.z, f.z, 0,
+                t.x, t.y, t.z, 1
+        ];
+        return m;
+    }

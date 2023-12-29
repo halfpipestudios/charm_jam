@@ -21,7 +21,9 @@ var g = {
 
     ui : null,
 
-    gameStateManager: null
+    gameStateManager: null,
+
+    timer: 0
 
 }
 
@@ -81,17 +83,27 @@ class Game {
         var clientRect = canvas.getBoundingClientRect();
 
         let identity = new Mat4;
-        let ortho = Mat4Orthographic(0, clientRect.right - clientRect.left,
-                                     0, clientRect.bottom - clientRect.top,
-                                     0, -100.0);
+        let ortho = Mat4Orthographic(0, g.window_w,
+                                     0, g.window_h,
+                                     0.0, 100.0);
+        let view = Mat4Translate(0, 0, 0);
 
         g.shader.Bind();
         gl.uniformMatrix4fv(g.shader.GetUniformLocation("Model"), false, identity.m);
-        gl.uniformMatrix4fv(g.shader.GetUniformLocation("View"), false, identity.m);
+        gl.uniformMatrix4fv(g.shader.GetUniformLocation("View"), false, view.m);
         gl.uniformMatrix4fv(g.shader.GetUniformLocation("Proj"), false, ortho.m);
     }
 
     Update(deltaTime) {
+        g.timer += deltaTime;
+        let scale = (Math.cos(g.timer*4) + 1) / 2;
+
+        let ortho = Mat4Orthographic(
+            0, g.window_w + scale * 1000,
+            0, g.window_h + scale * 1000,
+            0.0, 100.0);
+        gl.uniformMatrix4fv(g.shader.GetUniformLocation("Proj"), false, ortho.m);
+
 
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:

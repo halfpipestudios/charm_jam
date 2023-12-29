@@ -10,6 +10,12 @@ function InitWebGL() {
         return null;
     }
 
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthMask(gl.TRUE);
+    gl.depthFunc(gl.ALWAYS);  
+    gl.disable(gl.CULL_FACE);
+    //gl.cullFace(gl.NONE);
+
     return canvas;
 
 }
@@ -45,7 +51,7 @@ class Engine {
         this.game.Update(deltaTime);
         
         gl.clearColor(0.05, 0.05, 0.2, 1.0);
-        gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         
         this.game.Render();
 
