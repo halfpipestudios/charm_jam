@@ -77,7 +77,7 @@ class Saw {
     ProcessIdleState(dt) {
         this.pos = this.start;
 
-        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB())) {   
+        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB()) && this.charming == false) {   
             g.player.DecreaseHealth(1);
             this.hitOnce = true;
         }
@@ -98,7 +98,7 @@ class Saw {
         this.pos = Vec2Add(this.shotPos, Vec2MulScalar(dir, this.speed * this.currentTime));
         this.currentTime += dt;
 
-        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB())) {   
+        if(!this.hitOnce && TestCircleAABB(this.GetCircle(), g.player.sprite.GetAABB()) && this.charming == false) {   
             g.player.DecreaseHealth(1);
             this.hitOnce = true;
         }

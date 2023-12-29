@@ -4,15 +4,15 @@ class Ui {
         
         this.health = [];
         
-        let r = 32;
-        let p = 10;
+        let r = 48;
+        let p = 24;
             
-        let x = r/2 + 10;
-        let y = g.window_h - r + 10;
+        let x = r/2 + 32;
+        let y = g.window_h - r;
         
         for(let index = 0; index < g.player.health; ++index) {
             this.health.push(new Sprite(new Vec2(x, y), r, r, c.red));
-            x += 32 + p;
+            x += r + p;
         }
     
     }
