@@ -1,22 +1,30 @@
 const basicVertexShaderSrc = `
-    attribute vec4 aVertexPosition;
+    attribute vec2 aVertexPosition;
+    attribute vec2 aTexCoord;
     
+    varying vec2 UVs;
+
     uniform mat4 Model;
     uniform mat4 View;
     uniform mat4 Proj;
 
+
     void main() {
-        gl_Position = Proj * View * Model * aVertexPosition;
+        gl_Position = Proj * View * Model * vec4(aVertexPosition, 0, 1);
+        UVs = aTexCoord;
     }
 `;
 
 const basicFragmentShaderSrc = `
     precision mediump float;
 
+    varying vec2 UVs;
+
     uniform vec4 Color;
+    uniform sampler2D Sampler;
     
     void main() {
-        gl_FragColor = Color;
+        gl_FragColor  = texture2D(Sampler, UVs) * Color;
     }
 `;
 

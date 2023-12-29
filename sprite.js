@@ -8,11 +8,26 @@ class Sprite {
         // TODO: set this matrix to represent the scale and position of the sprite
         this.model = Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1));
 
+        let verticesTexCoords = new Float32Array([
+            -0.5, 0.5, 0.0, 1.0,
+            -0.5, -0.5, 0.0, 0.0,
+            0.5, 0.5, 1.0, 1.0,
+            0.5, -0.5, 1.0, 0.0,
+        ]);
+        let n = 4;
+
         // Initialize gpu buffer
         this.gpuBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, this.gpuBuffer);
-        const positions = [0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5];
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+        gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.gpuBuffer);
+
+        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
+        gl.enableVertexAttribArray(0);
+
+        gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
+        gl.enableVertexAttribArray(1);
     }
 
     Update(dt) {
@@ -20,12 +35,6 @@ class Sprite {
     }
 
     Render(shader) {
-        let attributePosLoc = gl.getAttribLocation(shader.program, "aVertexPosition")
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.gpuBuffer);
-        gl.vertexAttribPointer(attributePosLoc, 2, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(attributePosLoc);
-
         shader.Bind();
         gl.uniformMatrix4fv(shader.GetUniformLocation("Model"), false, this.model.m);
         gl.uniform4f(shader.GetUniformLocation("Color"), this.color.x, this.color.y, this.color.z, this.color.w);

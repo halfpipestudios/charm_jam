@@ -14,6 +14,11 @@ function InitWebGL() {
     gl.depthMask(gl.TRUE);
     gl.depthFunc(gl.ALWAYS);  
     gl.disable(gl.CULL_FACE);
+
+
+    gl.enable(gl.BLEND); 
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
     //gl.cullFace(gl.NONE);
 
     return canvas;

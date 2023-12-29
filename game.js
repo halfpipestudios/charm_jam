@@ -16,6 +16,8 @@ var g = {
     soundManager : new SoundManager(),
     textureManager: new TextureManager(),
 
+    camera : null,
+
     boss : null,
     player : null,
     snakeBoss: null,
@@ -35,7 +37,10 @@ function InitGlobals() {
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
-    g.textureManager.AddTexture("bullet", "./assets/bullet.png");
+   g.textureManager.AddTexture("bullet0", "https://cdn.discordapp.com/attachments/344240748473876490/1190392762101674044/bullet0.png");
+   g.textureManager.AddTexture("bullet", "https://cdn.discordapp.com/attachments/344240748473876490/1190392747056693368/bullet.png");
+    
+   g.camera = new Camera();
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
@@ -86,7 +91,7 @@ class Game {
         let ortho = Mat4Orthographic(0, g.window_w,
                                      0, g.window_h,
                                      0.0, 100.0);
-        let view = Mat4Translate(0, 0, 0);
+        let view = g.camera.GetViewMatrix();
 
         g.shader.Bind();
         gl.uniformMatrix4fv(g.shader.GetUniformLocation("Model"), false, identity.m);
@@ -96,6 +101,9 @@ class Game {
 
     Update(deltaTime) {
         g.timer += deltaTime;
+        
+        g.camera.Update(deltaTime);
+
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:
                 if(KeyJustDown(KeyCode.KEY_1)) {

@@ -14,7 +14,7 @@ class Player {
         this.health = 4;
 
         this.damageAnimationEnable      = false;
-        this.damageAnimationDuration    = 1;
+        this.damageAnimationDuration    = 0.8;
         this.damageAnimationCurrentTime = 0;
         this.dameAnimationSrcColor      = c.green1;
         this.dameAnimationDesColor      = c.red;
@@ -106,6 +106,7 @@ class Player {
         if(this.damageAnimationEnable) return;
         this.health = Math.max(this.health - amount, 0);
         this.PlayDamageAnimation();
+        g.camera.ScreenShake();
         if(this.health == 0) {
             g.gameStateManager.PopState();
         }
