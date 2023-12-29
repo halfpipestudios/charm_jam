@@ -121,8 +121,16 @@ class Pistol {
         }
 
         for(let i = 0; i < this.bulletCount; ++i) {
-            //this.bullets[i].ProcessBossCollision(dt);
-            this.bullets[i].ProcessSnakeBossCollision(dt);
+
+            switch(g.gameStateManager.GetState()) {
+                case GameState.Stage1:
+                    this.bullets[i].ProcessBossCollision(dt);
+                    break;
+                case GameState.Stage2: 
+                    this.bullets[i].ProcessSnakeBossCollision(dt);
+                    break;
+            }
+
             this.bullets[i].pos = Vec2Add(this.bullets[i].pos, Vec2MulScalar(this.bullets[i].vel, dt));
             this.bullets[i].Update(dt);
         }

@@ -33,6 +33,12 @@ class Saw {
         this.charming = false;
     }
 
+    Reset() {
+        this.health = 100;
+        this.charming = false;
+        this.sprite.color = c.gray1;
+    }
+
     Shot(target, speed) {
         if(speed < 0.001) return;
 

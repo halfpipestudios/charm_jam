@@ -8,6 +8,8 @@ const KeyCode = {
     KEY_D: 68,
     KEY_S: 83,
     KEY_W: 87,
+    KEY_1: 49,
+    KEY_2: 50
 }
 
 const MouseCode = {

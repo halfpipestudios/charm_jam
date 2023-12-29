@@ -9,11 +9,8 @@ class SnakeBoss {
 
     nodes = [];
 
-    constructor(pos) {
-        this.pos = new Vec2(pos.x, pos.y);
-        this.orientation = 0;
-        this.linVel = 0;
-        this.angVel = 0;
+    constructor() {
+        this.Reset();
         
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
@@ -27,11 +24,7 @@ class SnakeBoss {
         this.timer = 0;
         
 
-        let currentPos = pos;
-        for(let i = 0; i < this.nodeCount; ++i) {
-            this.nodes[i] = new Vec2(currentPos.x, currentPos.y);
-            currentPos.y += this.nodeDistance;
-        }
+ 
     }
 
     Update(target, dt) {
@@ -55,6 +48,18 @@ class SnakeBoss {
         this.ProcessDamageToPlayer(dt);
 
         this.timer += dt;
+    }
+
+    Reset() {
+        this.pos = new Vec2(1280/2, 720)
+        this.orientation = 0;
+        this.linVel = 0;
+        this.angVel = 0;
+        let currentPos = new Vec2(this.pos.x, this.pos.y);
+        for(let i = 0; i < this.nodeCount; ++i) {
+            this.nodes[i] = new Vec2(currentPos.x, currentPos.y);
+            currentPos.y += this.nodeDistance;
+        }
     }
 
     ProcessDamageToPlayer(dt) {

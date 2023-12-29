@@ -27,6 +27,26 @@ class Boss {
         this.timer = 0;
     }
 
+    Reset() {
+        let sawRadius = 32;
+        let padding = 28;
+        
+        this.pos = new Vec2(1280/2, 580);
+        this.saws = [new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*1+padding*1, 0)),
+            new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*3+padding*2, 0)),
+            new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*5+padding*3, 0)),
+            new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*7+padding*4, 0)),
+
+            new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*1+padding*1), 0)),
+            new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*3+padding*2), 0)),
+            new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*5+padding*3), 0)),
+            new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*7+padding*4), 0))];
+        
+        //for(let i = 0; i < this.saws.length; ++i) {
+        //    this.saws[i].Reset();
+        //}
+    }
+
     Update(dt) {
 
         this.timer += dt*0.5;

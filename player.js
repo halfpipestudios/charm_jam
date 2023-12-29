@@ -22,6 +22,13 @@ class Player {
 
     }
 
+    Reset() {
+        this.health = 4;
+        this.pos = new Vec2(g.window_w/2, g.window_h/2);
+        this.damageAnimationEnable = false;
+        this.sprite.color = c.green1;
+    }
+
     Update(dt) {
 
         let faceDir = new Vec2(0, 0);
@@ -99,6 +106,9 @@ class Player {
         if(this.damageAnimationEnable) return;
         this.health = Math.max(this.health - amount, 0);
         this.PlayDamageAnimation();
+        if(this.health == 0) {
+            g.gameStateManager.PopState();
+        }
     }
 
     PlayDamageAnimation()  {

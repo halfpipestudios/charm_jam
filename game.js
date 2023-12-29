@@ -21,6 +21,8 @@ var g = {
 
     ui : null,
 
+    gameStateManager: null
+
 }
 
 function InitGlobals() {
@@ -32,9 +34,42 @@ function InitGlobals() {
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
-    g.snakeBoss = new SnakeBoss(new Vec2(1280/2, 100));
+    g.snakeBoss = new SnakeBoss();
 
     g.ui = new Ui();
+
+    g.gameStateManager = new GameStateManager();
+}
+
+const GameState = {
+    Menu: "menu",
+    Defeated: "defeated",
+    Pause: "pause",
+    Stage1: "stage1",
+    Stage2: "stage2",
+}
+
+class GameStateManager {
+    constructor() {
+        this.state = {state: GameState.Menu, onEnter: null};
+        this.stack = [];
+    }
+
+    SetState(state, callback) {
+        this.stack.push({state: this.state.state, onEnter: this.state.onEnter});
+        this.state.state = state;
+        this.state.onEnter = callback;
+        if(this.state.onEnter !== null) this.state.onEnter();
+    }
+
+    GetState() {
+        return this.state.state;
+    }
+
+    PopState() {
+        this.state = this.stack.pop();
+        if(this.state.onEnter !== null) this.state.onEnter();
+    }
 }
 
 class Game {
@@ -57,17 +92,58 @@ class Game {
     }
 
     Update(deltaTime) {
-        g.player.Update(deltaTime);
-        g.snakeBoss.Update(g.player.pos, deltaTime);
 
-        //g.boss.Update(deltaTime);
+        switch(g.gameStateManager.GetState()) {
+            case GameState.Menu:
+                if(KeyJustDown(KeyCode.KEY_1)) {
+                    g.gameStateManager.SetState(GameState.Stage1, () => {
+                        g.boss.Reset();
+                        g.player.Reset();
+                    });
+                }
+                if(KeyJustDown(KeyCode.KEY_2)) {
+                    g.gameStateManager.SetState(GameState.Stage2, () => {
+                        g.snakeBoss.Reset();
+                        g.player.Reset();
+                    });
+                }
+                break;
+            case GameState.Defeated:
+                break;
+            case GameState.Pause: 
+                break;
+            case GameState.Stage1:
+                g.player.Update(deltaTime);
+                g.boss.Update(deltaTime);
+                break;
+            case GameState.Stage2: 
+                g.player.Update(deltaTime);
+                g.snakeBoss.Update(g.player.pos, deltaTime);
+                break;
+        }
+
         g.ui.Update(deltaTime);
     }
 
     Render() {
-        g.player.Render(g.shader);
-        g.snakeBoss.Render(g.shader);
-        //g.boss.Render();
+
+        switch(g.gameStateManager.GetState()) {
+            case GameState.Menu:
+                break;
+            case GameState.Defeated:
+                break;
+            case GameState.Pause: 
+                break;
+            case GameState.Stage1:
+                g.player.Render(g.shader);
+                g.boss.Render();
+                break;
+            case GameState.Stage2: 
+                g.player.Render(g.shader);
+                g.snakeBoss.Render(g.shader);
+                break;
+        }
+
         g.ui.Render();
     }
 
