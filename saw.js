@@ -27,7 +27,7 @@ class Saw {
         this.state = SawState.Idle;
 
         this.radius = radius;
-        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.gray1);
+        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.white);
         
         this.health = 100;
         this.charming = false;
@@ -77,6 +77,7 @@ class Saw {
     }
 
     Render() {
+        g.textureManager.BindTexture("saw");
         this.sprite.Render(g.shader);
     }
     
