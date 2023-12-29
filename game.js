@@ -1,4 +1,5 @@
 var c = {
+    white:  new Vec4(1, 1, 1, 1),
     gray1:  new Vec4(124/255, 124/255, 124/255, 1),
     gray2:  new Vec4(64/255, 64/255, 64/255, 1),
     green:  new Vec4(0, 1, 0, 1),
@@ -37,9 +38,10 @@ function InitGlobals() {
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
-   g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet.png");
+    g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet.png");
+    g.textureManager.AddTexture("saw", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/saw.png");
     
-   g.camera = new Camera();
+    g.camera = new Camera();
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();

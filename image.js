@@ -48,4 +48,10 @@ class TextureManager {
         return texture;
     }
 
+    BindTexture(name) {
+        let texture = this.GetTexture(name);
+        gl.bindTexture(gl.TEXTURE_2D, texture.texture);
+
+    }
+
 }
