@@ -15,6 +15,8 @@ var g = {
     shader : new Shader(),
     soundManager : new SoundManager(),
 
+    camera : null,
+
     boss : null,
     player : null,
     snakeBoss: null,
@@ -33,6 +35,8 @@ function InitGlobals() {
     g.soundManager.AddSound("cave", "./assets/sound.wav", true);
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
+
+    g.camera = new Camera();
 
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
@@ -86,7 +90,7 @@ class Game {
         let ortho = Mat4Orthographic(0, g.window_w,
                                      0, g.window_h,
                                      0.0, 100.0);
-        let view = Mat4Translate(0, 0, 0);
+        let view = g.camera.GetViewMatrix();
 
         g.shader.Bind();
         gl.uniformMatrix4fv(g.shader.GetUniformLocation("Model"), false, identity.m);
@@ -95,15 +99,8 @@ class Game {
     }
 
     Update(deltaTime) {
-        g.timer += deltaTime;
-        let scale = (Math.cos(g.timer*4) + 1) / 2;
-
-        let ortho = Mat4Orthographic(
-            0, g.window_w + scale * 1000,
-            0, g.window_h + scale * 1000,
-            0.0, 100.0);
-        gl.uniformMatrix4fv(g.shader.GetUniformLocation("Proj"), false, ortho.m);
-
+        
+        g.camera.Update(deltaTime);
 
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:

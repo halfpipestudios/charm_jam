@@ -24,6 +24,8 @@ class Ui {
     }
 
     Render() {
+        g.shader.Bind();
+        gl.uniformMatrix4fv(g.shader.GetUniformLocation("View"), false, new Mat4().m);
         for(let index = 0; index < g.player.health; ++index) {
             this.health[index].Render(g.shader);
         }
