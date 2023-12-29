@@ -3,10 +3,10 @@ class Boss {
     constructor() {
         
         this.pos = new Vec2(1280/2, 580);
-        this.radius = 48;
-        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.gray2);
+        this.radius = 96;
+        this.sprite = new Sprite(this.pos, this.radius*2, this.radius*2, c.white);
 
-        let sawRadius = 32;
+        let sawRadius = 64;
         let padding = 28;
         this.saws = [new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*1+padding*1, 0)),
                      new Saw(this, sawRadius, new Vec2(this.radius+sawRadius*3+padding*2, 0)),
@@ -28,7 +28,7 @@ class Boss {
     }
 
     Reset() {
-        let sawRadius = 32;
+        let sawRadius = 64;
         let padding = 28;
         
         this.pos = new Vec2(1280/2, 580);
@@ -81,6 +81,7 @@ class Boss {
 
     Render() {
         
+        g.textureManager.BindTexture("boss");
         this.sprite.Render(g.shader);
 
         for(let i = 0; i < this.saws.length; ++i) {
