@@ -90,6 +90,9 @@ class Saw {
             g.player.DecreaseHealth(1);
             this.hitOnce = true;
         }
+        
+        this.sprite.rotation = this.angle;
+        this.angle -= dt;
 
     }
 
@@ -108,7 +111,6 @@ class Saw {
         this.currentTime += dt;
 
         this.sprite.rotation = this.angle;
-            
         this.angle += dt*15;
 
         if(!this.hitOnce && TestCircleCircle(this.GetCircle(), g.player.GetCircle()) && this.charming == false) {   
@@ -127,9 +129,8 @@ class Saw {
             return;
         }
 
-        this.sprite.rotation = -this.angle;
-
-        this.angle += dt*5;
+        this.sprite.rotation = this.angle;
+        this.angle -= dt*5;
 
         let dir = Vec2Sub(this.start, this.end);
         this.pos = Vec2Add(this.end, Vec2MulScalar(dir, this.EaseInOutQuad(this.currentTime)));
