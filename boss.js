@@ -61,11 +61,20 @@ class Boss {
     Update(dt) {
 
         this.timer += dt*0.5;
+  
+        if(!this.defeted) {
 
-        let xOffset = Math.cos(this.timer) * 300;
-        let yOffset = Math.sin (this.timer) * 100;
-
-        this.pos = new Vec2(1280/2 + xOffset, 720*(3/4) + yOffset);
+            let xOffset = Math.cos(this.timer) * 300;
+            let yOffset = Math.sin (this.timer) * 100;
+    
+            this.pos = new Vec2(1280/2 + xOffset, 720*(3/4) + yOffset);
+  
+        } else {
+            let s = 20;
+            let center = new Vec2(g.window_w/2, g.window_h/2);
+            let dir = Vec2Normalize(Vec2Sub(center, this.pos));
+            this.pos = Vec2Add(this.pos, Vec2MulScalar(dir, dt * s));
+        }
         
         if(this.currentTime >= this.minTimeBetweenShots) {
             let index = this.FindSawToShot();
