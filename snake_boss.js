@@ -242,8 +242,8 @@ class SnakeBoss {
         }
 
         for(let i = 0; i < this.nodeCount; ++i) {
-            this.nodes[i].pos.x = this.nodes[i].pos.x + (Math.random() * 2 - 1) * 10;
-            this.nodes[i].pos.y = this.nodes[i].pos.y + (Math.random() * 2 - 1) * 10;
+            this.nodes[i].pos.x = this.nodes[i].pos.x + (Math.random() * 2 - 1) * 2;
+            this.nodes[i].pos.y = this.nodes[i].pos.y + (Math.random() * 2 - 1) * 2;
         }
     }
 }
