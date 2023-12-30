@@ -79,7 +79,7 @@ function InitGlobals() {
     g.textureManager.AddTexture("snake_cute_body", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/snake_cute_body.png");
     g.textureManager.AddTexture("snake_cute_tail", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/snake_cute_tale.png");
 
-    g.textureManager.AddTexture("tuto", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto1.png");
+    g.textureManager.AddTexture("tuto", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto.png");
     g.textureManager.AddTexture("pinguino", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/penguin.png");
     g.textureManager.AddTexture("grid", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/grid.png");
     g.textureManager.AddTexture("gun", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/gun.png");
