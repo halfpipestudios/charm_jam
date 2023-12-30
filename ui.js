@@ -11,7 +11,7 @@ class Ui {
         let y = g.window_h - r;
         
         for(let index = 0; index < g.player.health; ++index) {
-            this.health.push(new Sprite(new Vec2(x, y), r, r, c.white));
+            this.health.push(new Sprite(new Vec2(x, y), r, r, c.red));
             x += r + p;
         }
         

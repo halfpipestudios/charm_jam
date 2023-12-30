@@ -23,6 +23,7 @@ var g = {
     boss : null,
     player : null,
     snakeBoss: null,
+    life: null,
 
     ui : null,
 
@@ -88,6 +89,7 @@ function InitGlobals() {
     g.player = new Player(new Vec2(320, 60), new Pistol);
     g.boss = new Boss();
     g.snakeBoss = new SnakeBoss();
+    g.life = new Life();
 
     g.ui = new Ui();
 
@@ -174,10 +176,12 @@ class Game {
             case GameState.Stage1:
                 g.player.Update(deltaTime);
                 g.boss.Update(deltaTime);
+                g.life.Update(deltaTime);
                 break;
             case GameState.Stage2: 
                 g.player.Update(deltaTime);
                 g.snakeBoss.Update(g.player.pos, deltaTime);
+                g.life.Update(deltaTime);
                 break;
         }
 
@@ -198,12 +202,14 @@ class Game {
                 this.backgournd.Render(g.shader);
                 g.boss.Render();
                 g.player.Render(g.shader);
+                g.life.Render();
                 break;
             case GameState.Stage2: 
                 g.textureManager.BindTexture("grid");
                 this.backgournd.Render(g.shader);
                 g.snakeBoss.Render(g.shader);
                 g.player.Render(g.shader);
+                g.life.Render();
                 break;
         }
 

@@ -12,6 +12,7 @@ class Player {
         this.head = new Sprite(this.pos, 25, 25, c.white);
 
         this.health = 4;
+        this.maxHealth = 4;
 
         this.damageAnimationEnable      = false;
         this.damageAnimationDuration    = 0.8;
@@ -22,6 +23,7 @@ class Player {
         this.deathAnimationEnable = false;
         this.deathAnimationDuration = 8;
         this.deathAnimationCurrentTime = 0;
+        this.deathAnimationTimer = 0;
 
     }
 
@@ -30,6 +32,7 @@ class Player {
         this.pos = new Vec2(g.window_w/2, g.window_h/2);
         this.damageAnimationEnable = false;
         this.sprite.color = c.white;
+        this.deathAnimationTimer = 0;
     }
 
     PlayerHitWall(aabb, normal, dt) {
@@ -102,7 +105,19 @@ class Player {
             acc = Vec2MulScalar(Vec2Normalize(acc), 1600);
         }
 
-        if(this.deathAnimationEnable) acc = new Vec2(0, 0);
+        if(this.deathAnimationEnable) {
+             acc = new Vec2(0, 0);
+
+            if(this.deathAnimationTimer === 0) {
+                g.camera.ScreenShake();
+            }
+
+            this.deathAnimationTimer += dt;
+            if(this.deathAnimationTimer >= 0.05) {
+                this.deathAnimationTimer = 0;
+            }
+            
+        }
 
         let currentOrientation = this.orientation;
         let targetOrientation = Vec2ToAngle(faceDir);
@@ -119,6 +134,8 @@ class Player {
         this.ProcessPlayerWallCollisions(dt);
 
         this.pos = Vec2Add(this.pos, Vec2MulScalar(this.vel, dt));
+
+        this.PlayerCachFile();
 
         let damping = Math.pow(0.003, dt);
         this.vel = Vec2MulScalar(this.vel, damping);
@@ -151,6 +168,16 @@ class Player {
         this.sprite.Render(shader);
         g.textureManager.BindTexture("gun");
         this.head.Render(shader);
+    }
+
+    PlayerCachFile() {
+        if(TestCircleCircle(g.life.circle, this.GetCircle()) && g.life.active === true) {
+            g.life.active = false;
+            this.health++;
+            if(this.health > this.maxHealth) {
+                this.health = this.maxHealth;
+            }
+        }
     }
 
     DecreaseHealth(amount) {
