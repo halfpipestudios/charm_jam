@@ -2,7 +2,7 @@ class Bullet {
     constructor(pos) {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
-        this.sprite = new Sprite(this.pos, 20, 20, new Vec4(1, 1, 1, 1));
+        this.sprite = new Sprite(this.pos, 20, 20, c.white);
         this.firstCollision = true;
         
         this.damage = 10;
@@ -103,7 +103,7 @@ class Pistol {
     Shoot(pos, vel) {
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
-        this.bullets[this.currentBullet].sprite.color = new Vec4(0, 1, 0, 1);
+        this.bullets[this.currentBullet].sprite.color = c.white;
         this.bullets[this.currentBullet].firstCollision = true;
         this.currentBullet++;
         if(this.currentBullet >= this.bulletCount) {

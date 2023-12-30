@@ -9,14 +9,14 @@ class Player {
         this.weapon = weapon;
 
         this.lastFaceDir = new Vec2(1, 0);
-        this.head = new Sprite(this.pos, 10, 10, new Vec4(1, 0, 1, 1));
+        this.head = new Sprite(this.pos, 25, 25, c.white);
 
         this.health = 4;
 
         this.damageAnimationEnable      = false;
         this.damageAnimationDuration    = 0.8;
         this.damageAnimationCurrentTime = 0;
-        this.dameAnimationSrcColor      = c.green1;
+        this.dameAnimationSrcColor      = c.white;
         this.dameAnimationDesColor      = c.red;
 
 
@@ -84,6 +84,7 @@ class Player {
         this.vel = Vec2MulScalar(this.vel, damping);
 
         this.head.pos = Vec2Add(this.pos, Vec2MulScalar(dir, 25));
+        this.head.rotation = -this.orientation;
         
         this.sprite.pos = this.pos;
         this.sprite.Update(dt);
@@ -97,8 +98,10 @@ class Player {
     }
 
     Render(shader) {
-        g.textureManager.BindTexture("pinguino");
+        
         this.weapon.Render(shader);
+
+        g.textureManager.BindTexture("pinguino");
         this.sprite.Render(shader);
         g.textureManager.BindTexture("gun");
         this.head.Render(shader);
