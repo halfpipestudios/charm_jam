@@ -5,7 +5,7 @@ class Player {
         this.vel = new Vec2(0, 0);
         this.orientation = 0;
         this.radius = 25;
-        this.sprite = new Sprite(this.pos, 50, 50, c.green1);
+        this.sprite = new Sprite(this.pos, 50, 50, c.white);
         this.weapon = weapon;
 
         this.lastFaceDir = new Vec2(1, 0);
@@ -26,7 +26,7 @@ class Player {
         this.health = 4;
         this.pos = new Vec2(g.window_w/2, g.window_h/2);
         this.damageAnimationEnable = false;
-        this.sprite.color = c.green1;
+        this.sprite.color = c.white;
     }
 
     Update(dt) {
@@ -100,6 +100,7 @@ class Player {
         g.textureManager.BindTexture("pinguino");
         this.weapon.Render(shader);
         this.sprite.Render(shader);
+        g.textureManager.BindTexture("gun");
         this.head.Render(shader);
     }
 
