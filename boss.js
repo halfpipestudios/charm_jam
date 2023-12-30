@@ -21,7 +21,7 @@ class Boss {
 
         this.minShotSpeed = 600;
         this.maxShotSpeed = 700;
-        this.minTimeBetweenShots = 2.0;
+        this.minTimeBetweenShots = 1.8;
         this.currentTime = 0;  
         
         this.timer = 0;

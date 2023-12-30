@@ -143,7 +143,8 @@ class Saw {
 
     CalculateTragetFromPlayer(dt) {
         let result = Vec2;
-        result = g.player.pos;
+        let dir = Vec2Normalize(Vec2Sub(this.pos, g.player.pos));
+        result = Vec2Sub(g.player.pos, Vec2MulScalar(dir, 300));
         return result;
     }
 

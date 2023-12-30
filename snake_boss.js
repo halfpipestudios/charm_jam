@@ -20,7 +20,7 @@ class SnakeBoss {
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
 
-        this.sprite = new Sprite(this.pos, 50, 50, new Vec4(1, 1, 0, 1));
+        this.sprite = new Sprite(this.pos, 50, 50, c.white);
 
         this.state = SnakeBossState.Rest;
         this.timer = 0;
@@ -32,7 +32,7 @@ class SnakeBoss {
         let snakeWasKill = 0;
         for(let i = 0; i < this.nodeCount; ++i) {
             if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
-                g.snakeBoss.nodes[i].color = new Vec4(0, 1, 0, 1);
+                g.snakeBoss.nodes[i].color = c.green;
                 g.snakeBoss.nodes[i].alive = false;
             }
             if(!g.snakeBoss.nodes[i].life) {
@@ -76,7 +76,7 @@ class SnakeBoss {
             this.nodes.push({
                  pos: new Vec2(currentPos.x, currentPos.y),
                  orientation: 0,
-                 color: new Vec4(1, 1, 0, 1),
+                 color: c.white,
                  life: 1,
                  alive: true});
             currentPos.y += this.nodeDistance;
