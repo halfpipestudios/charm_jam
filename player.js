@@ -97,6 +97,7 @@ class Player {
     }
 
     Render(shader) {
+        g.textureManager.BindTexture("pinguino");
         this.weapon.Render(shader);
         this.sprite.Render(shader);
         this.head.Render(shader);
