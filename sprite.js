@@ -6,33 +6,21 @@ class Sprite {
         this.w = w;
         this.h = h;
         this.color = color;
+
+        this.damageAnimationEnable      = false;
+        this.damageAnimationDuration    = 0.0;
+        this.damageAnimationCurrentTime = 0;
+        this.dameAnimationSrcColor      = c.white;
+        this.dameAnimationDesColor      = c.white;
+        this.dameAnimationFreq          = 1;
+
         // TODO: set this matrix to represent the scale and position of the sprite
         this.model = Mat4Mul(Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1)), Mat4RotateZ(this.rotation));
-
-        let verticesTexCoords = new Float32Array([
-            -0.5, 0.5, 0.0, 1.0,
-            -0.5, -0.5, 0.0, 0.0,
-            0.5, 0.5, 1.0, 1.0,
-            0.5, -0.5, 1.0, 0.0,
-        ]);
-        let n = 4;
-
-        // Initialize gpu buffer
-        this.gpuBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.gpuBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
-
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.gpuBuffer);
-
-        gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
-        gl.enableVertexAttribArray(0);
-
-        gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
-        gl.enableVertexAttribArray(1);
     }
 
     Update(dt) {
         this.model = Mat4Mul(Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1)), Mat4RotateZ(this.rotation));
+        this.UpdateDamageAnimation(dt);
     }
 
     Render(shader) {
@@ -51,6 +39,31 @@ class Sprite {
         let max = Vec2Add(this.pos, new Vec2(this.w/2, this.h/2));
         let aabb = new AABB(min, max);
         return aabb;
+    }
+
+
+    PlayDamageAnimation(duration, color, freq)  {
+        this.damageAnimationEnable = true;
+        this.damageAnimationCurrentTime = 0;
+        this.damageAnimationDuration    = duration;
+        this.dameAnimationDesColor      = color;
+        this.dameAnimationFreq          = freq;
+    }
+
+    UpdateDamageAnimation(dt) {
+        
+        if(!this.damageAnimationEnable) return;
+
+        if(this.damageAnimationCurrentTime > this.damageAnimationDuration) {
+            this.color = this.dameAnimationSrcColor;
+            this.damageAnimationEnable = false;
+            return;
+        }
+        let t = (Math.sin(this.damageAnimationCurrentTime * this.dameAnimationFreq) + 1) / 2;
+        this.color = Vec4Lerp(this.dameAnimationSrcColor, this.dameAnimationDesColor, t);
+        this.damageAnimationCurrentTime += dt;
+        console.log(this.color);
+        
     }
 }
 

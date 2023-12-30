@@ -74,7 +74,7 @@ class Saw {
         }
 
         this.sprite.pos = this.pos;
-        this.sprite.Update();
+        this.sprite.Update(dt);
 
     }
 
@@ -154,6 +154,9 @@ class Saw {
         if(this.health == 0) {
             this.charming = true;
             this.sprite.color = c.green;
+        }
+        else {
+            this.sprite.PlayDamageAnimation(0.2, c.overflow, 100);
         }
     }
 

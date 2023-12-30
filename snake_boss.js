@@ -4,25 +4,24 @@ const SnakeBossState = {
     Rest: "rest",
     Seek: "seek"
 }
+const gScale = 1.5;
 
 class SnakeBoss {
 
     
 
     constructor() {
-        let scale = 1.5;
+        
 
         this.nodes = [];
         this.nodeCount = 30;
-        this.nodeDistance = 35 * scale;
+        this.nodeDistance = 35 * gScale;
 
         this.Reset();
         
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
-        let w = 50 * scale;
-        this.sprite = new Sprite(this.pos, w, w, c.white);
 
         this.state = SnakeBossState.Rest;
         this.timer = 0;
@@ -32,7 +31,7 @@ class SnakeBoss {
     Update(target, dt) {
 
         let snakeWasKill = 0;
-        for(let i = 0; i < this.nodeCount; ++i) {
+        for(let i = 1; i < this.nodeCount; ++i) {
             if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
                 g.snakeBoss.nodes[i].color = c.green;
                 g.snakeBoss.nodes[i].alive = false;
@@ -42,7 +41,7 @@ class SnakeBoss {
             }
         }
 
-        if(snakeWasKill === this.nodeCount) {
+        if(snakeWasKill === this.nodeCount-1) {
             g.gameStateManager.PopState();
         }
  
@@ -68,6 +67,7 @@ class SnakeBoss {
     }
 
     Reset() {
+        let w = 50 * gScale;
         this.nodes = [];
         this.pos = new Vec2(1280/2, 720)
         this.orientation = 0;
@@ -78,20 +78,26 @@ class SnakeBoss {
             this.nodes.push({
                  pos: new Vec2(currentPos.x, currentPos.y),
                  orientation: 0,
+                 sprite: this.sprite = new Sprite(new Vec2(currentPos.x, currentPos.y), w, w, c.white),
                  color: c.white,
                  life: 3,
                  alive: true});
             currentPos.y += this.nodeDistance;
         }
-        let stop = 0;
+
+        this.nodes[0].sprite.w *= 1.6;
+        this.nodes[0].sprite.h *= 1.6;
+        this.nodes[this.nodeCount - 1].sprite.w *= 1.4;
+        this.nodes[this.nodeCount - 1].sprite.h *= 1.4;
+
     }
 
     ProcessDamageToPlayer(dt) {
         for(let i = 0; i < this.nodes.length; ++i) {
             if(this.nodes[i].alive || i == 0) {
                 let pos = this.nodes[i].pos;
-                let sprite = this.sprite;
-                let circle = new Circle(pos, sprite.w*0.45);
+                let sprite = this.nodes[i].sprite;
+                let circle = new Circle(pos, 50*0.45);
                 if(TestCircleCircle(circle, g.player.GetCircle())) {   
                     g.player.DecreaseHealth(1);
                 }
@@ -101,41 +107,28 @@ class SnakeBoss {
 
     Render(shader) {
 
-        let ogW = this.sprite.w;
-        let ogH = this.sprite.h;
-
         g.textureManager.BindTexture("snake_bad_tail");
-        this.sprite.pos = this.nodes[this.nodeCount - 1].pos;
-        this.sprite.rotation = -(this.nodes[this.nodeCount - 1].orientation + Math.PI/2);
-        this.sprite.color = this.nodes[this.nodeCount - 1].color;
-        this.sprite.w = ogW * 1.4;
-        this.sprite.h = ogH * 1.4;
-        this.sprite.Update(0.016);
-        this.sprite.Render(shader);
+        this.nodes[this.nodeCount - 1].sprite.pos = this.nodes[this.nodeCount - 1].pos;
+        this.nodes[this.nodeCount - 1].sprite.rotation = -(this.nodes[this.nodeCount - 1].orientation + Math.PI/2);
+        this.nodes[this.nodeCount - 1].sprite.color = this.nodes[this.nodeCount - 1].color;
+        this.nodes[this.nodeCount - 1].sprite.Update(0.016);
+        this.nodes[this.nodeCount - 1].sprite.Render(shader);
 
         g.textureManager.BindTexture("snake_bad_body");
         for(let i = this.nodeCount - 2; i >= 1; --i) {
-            this.sprite.pos = this.nodes[i].pos;
-            this.sprite.rotation = -(this.nodes[i].orientation + Math.PI/2);
-            this.sprite.color = this.nodes[i].color;
-            this.sprite.w = ogW;
-            this.sprite.h = ogH;
-            this.sprite.Update(0.016);
-            this.sprite.Render(shader);
+            this.nodes[i].sprite.pos = this.nodes[i].pos;
+            this.nodes[i].sprite.rotation = -(this.nodes[i].orientation + Math.PI/2);
+            this.nodes[i].sprite.color = this.nodes[i].color;
+            this.nodes[i].sprite.Update(0.016);
+            this.nodes[i].sprite.Render(shader);
         }
 
         g.textureManager.BindTexture("snake_bad_head");
-        this.sprite.pos = this.nodes[0].pos;
-        this.sprite.rotation = -(this.nodes[0].orientation + Math.PI/2);
-        this.sprite.color = this.nodes[0].color;
-        this.sprite.w = ogW * 1.6;
-        this.sprite.h = ogH * 1.6;
-        this.sprite.Update(0.016);
-        this.sprite.Render(shader);
-
-        this.sprite.rotation = 0;
-        this.sprite.w = ogW;
-        this.sprite.h = ogH;
+        this.nodes[0].sprite.pos = this.nodes[0].pos;
+        this.nodes[0].sprite.rotation = -(this.nodes[0].orientation + Math.PI/2);
+        this.nodes[0].sprite.color = this.nodes[0].color;
+        this.nodes[0].sprite.Update(0.016);
+        this.nodes[0].sprite.Render(shader);
 
     }
 
@@ -225,5 +218,4 @@ class SnakeBoss {
         let damping = Math.pow(0.1, dt);
         this.linVel *= damping;
     }
-
 }

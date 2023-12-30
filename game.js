@@ -5,6 +5,7 @@ var c = {
     green:  new Vec4(0, 1, 0, 1),
     green1: new Vec4(0.5, 1, 0, 1),
     red:    new Vec4(1, 0, 0, 1),
+    overflow: new Vec4(3, 3, 3, 1),
 
 }
 
@@ -27,8 +28,30 @@ var g = {
 
     gameStateManager: null,
 
-    timer: 0
+    timer: 0,
 
+    gpuBuffer: null
+
+}
+
+function LoadQuadToGPU() {
+    let verticesTexCoords = new Float32Array([
+        -0.5, 0.5, 0.0, 1.0,
+        -0.5, -0.5, 0.0, 0.0,
+        0.5, 0.5, 1.0, 1.0,
+        0.5, -0.5, 1.0, 0.0,
+    ]);
+    let n = 4;
+
+    // Initialize gpu buffer
+    g.gpuBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, g.gpuBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, verticesTexCoords, gl.STATIC_DRAW);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 16, 0);
+    gl.enableVertexAttribArray(0);
+
+    gl.vertexAttribPointer(1, 2, gl.FLOAT, false, 16, 8);
+    gl.enableVertexAttribArray(1); 
 }
 
 function InitGlobals() {
@@ -50,6 +73,7 @@ function InitGlobals() {
     g.textureManager.AddTexture("grid", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/grid.png");
     g.textureManager.AddTexture("gun", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/gun.png");
     
+    LoadQuadToGPU();
     
     g.camera = new Camera();
 

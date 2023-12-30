@@ -27,6 +27,11 @@ class Bullet {
                     if(g.snakeBoss.nodes[i].life < 0) {
                         g.snakeBoss.nodes[i].life = 0;
                     }
+
+                    if(g.snakeBoss.nodes[i].alive) {
+                        g.snakeBoss.nodes[i].sprite.PlayDamageAnimation(0.2, c.overflow, 80);
+                    }
+
                     this.firstCollision = false;
                 }
             }
