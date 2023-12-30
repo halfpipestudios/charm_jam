@@ -78,7 +78,7 @@ class SnakeBoss {
                  pos: new Vec2(currentPos.x, currentPos.y),
                  orientation: 0,
                  sprite: this.sprite = new Sprite(new Vec2(currentPos.x, currentPos.y), w, w, c.white),
-                 life: 5,
+                 life: 3,
                  alive: true});
             currentPos.y += this.nodeDistance;
         }
