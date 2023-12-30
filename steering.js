@@ -58,3 +58,20 @@ function Seek(pos, orientation, target, maxAngVel, maxAcc, timeToTarget) {
 
     return steering;
 }
+
+function Arrive(pos, orientation, target, maxAngVel, maxAcc, timeToTarget) {
+    let steering = new Steering;
+
+    let d = Vec2Sub(pos, target);
+    if(d.length() < 100) return steering;
+
+    steering = Face(pos, orientation, target, maxAngVel, timeToTarget);
+
+    let angularVelSize = Math.abs(steering.angular);
+    let acc = maxAcc / (1 + angularVelSize);
+    acc = Math.max(Math.min(acc/timeToTarget, maxAcc), -maxAcc);
+
+    steering.linear = acc;
+
+    return steering;
+}

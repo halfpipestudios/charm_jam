@@ -235,11 +235,28 @@ class SnakeBoss {
         this.linVel *= damping;
     }
 
+    ProcessSnakeDeadMovement(target, dt) {
+        let steering = Arrive(this.pos, this.orientation, target, this.maxAngVel, this.maxAcc, this.timeToTarget);
+        this.linVel += steering.linear * dt;
+        this.angVel = steering.angular;
+        this.orientation += this.angVel * dt;
+        let dir = AngleToVec2(this.orientation);
+        let vel = Vec2MulScalar(dir, this.linVel * dt);
+        this.pos = Vec2Add(this.pos, vel);
+        let damping = Math.pow(0.1, dt);
+        this.linVel *= damping;
+    }
+
     ProcessSnakeDeadState(tar, dt) {
         if(this.timer >= 8.0) {
             g.gameStateManager.PopState();
             this.timer = 0;
         }
+
+        this.maxAngVel = 3*Math.PI;
+        this.maxAcc = 800;
+        this.timeToTarget = 0.5;
+        this.ProcessSnakeDeadMovement(new Vec2(g.window_w/2, g.window_h/2), dt);
 
         for(let i = 0; i < this.nodeCount; ++i) {
             this.nodes[i].pos.x = this.nodes[i].pos.x + (Math.random() * 2 - 1) * 2;

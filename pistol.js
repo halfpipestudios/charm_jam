@@ -18,7 +18,7 @@ class Bullet {
             let t = IntersectRayCircle(ray, circle);
             let d = Vec2MulScalar(this.vel, dt);
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
-                this.sprite.color = new Vec4(1, 0, 0, 1);
+                this.sprite.color = new Vec4(Math.random(), Math.random(), Math.random(), 0.8);
                 let randX = (Math.random() * 2.0 - 1) * 200.0;
                 let randY = (Math.random() * 2.0 - 1) * 200.0;
                 this.vel = new Vec2(randX, randY);
@@ -42,11 +42,11 @@ class Bullet {
     ProcessBossCollision(dt) {
         // boss collision            
         let ray = new Ray(this.pos, Vec2Normalize(this.vel));
-
+        let randColor = new Vec4(Math.random(), Math.random(), Math.random(), 0.8);
         let t = IntersectRayAABB(ray, g.boss.sprite.GetAABB());
         let d = Vec2MulScalar(this.vel, dt);
         if(t >= 0 && t*t < Vec2Dot(d, d)) {
-            this.sprite.color = new Vec4(1, 0, 0, 1);
+            this.sprite.color = randColor;
             let randX = (Math.random() * 2.0 - 1) * 200.0;
             let randY = (Math.random() * 2.0 - 1) * 200.0;
             this.vel = new Vec2(randX, randY);
@@ -67,7 +67,7 @@ class Bullet {
             if(t >= 0 && t*t < Vec2Dot(d, d)) {
                 //g.soundManager.GetSound("hit").Stop();
                 //g.soundManager.GetSound("hit").Play();
-                this.sprite.color = new Vec4(1, 0, 0, 1);
+                this.sprite.color = randColor;
                 let randX = (Math.random() * 2.0 - 1) * 200.0;
                 let randY = (Math.random() * 2.0 - 1) * 200.0;
                 this.vel = new Vec2(randX, randY);
@@ -86,7 +86,14 @@ class Bullet {
     } 
     
     Render(shader) {
-        g.textureManager.BindTexture("bullet");
+        if(this.firstCollision === true) {
+            g.textureManager.BindTexture("bullet");
+        }
+        else {
+            g.textureManager.BindTexture("life");
+            this.sprite.w = 16;
+            this.sprite.h = 16;
+        }
         this.sprite.Render(shader);
     }
 
@@ -108,6 +115,8 @@ class Pistol {
     Shoot(pos, vel) {
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
+        this.bullets[this.currentBullet].sprite.w = 32;
+        this.bullets[this.currentBullet].sprite.h = 32;
         this.bullets[this.currentBullet].sprite.color = c.white;
         this.bullets[this.currentBullet].firstCollision = true;
         this.currentBullet++;
