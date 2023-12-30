@@ -196,14 +196,14 @@ class Game {
             case GameState.Stage1:
                 g.textureManager.BindTexture("grid");
                 this.backgournd.Render(g.shader);
-                g.player.Render(g.shader);
                 g.boss.Render();
+                g.player.Render(g.shader);
                 break;
             case GameState.Stage2: 
                 g.textureManager.BindTexture("grid");
                 this.backgournd.Render(g.shader);
-                g.player.Render(g.shader);
                 g.snakeBoss.Render(g.shader);
+                g.player.Render(g.shader);
                 break;
         }
 
