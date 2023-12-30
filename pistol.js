@@ -2,7 +2,7 @@ class Bullet {
     constructor(pos) {
         this.pos = pos;
         this.vel = new Vec2(0, 0);
-        this.sprite = new Sprite(this.pos, 20, 20, c.white);
+        this.sprite = new Sprite(this.pos, 32, 32, c.white);
         this.firstCollision = true;
         
         this.damage = 10;
