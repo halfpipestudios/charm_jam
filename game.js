@@ -38,7 +38,7 @@ function InitGlobals() {
     g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
-    g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet.png");
+    g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet1.png");
     g.textureManager.AddTexture("saw", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/saw.png");
     g.textureManager.AddTexture("boss", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss.png");
     g.textureManager.AddTexture("life", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/life.png");
@@ -93,7 +93,7 @@ class GameStateManager {
 class Game {
 
     constructor() {
-        this.backgournd = new Sprite(new Vec2(g.window_w/2, g.window_h/2), g.window_w, g.window_h, c.white);
+        this.backgournd = new Sprite(new Vec2(g.window_w/2, g.window_h/2), g.window_w+64, g.window_h+64, c.white);
     }
 
     Initialize() {
