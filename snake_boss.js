@@ -2,7 +2,8 @@ const SnakeBossState = {
     Attack: "attack",
     PrepareAttack: "prepareAttack",
     Rest: "rest",
-    Seek: "seek"
+    Seek: "seek",
+    Dead: "dead"
 }
 const gScale = 1.5;
 
@@ -22,47 +23,6 @@ class SnakeBoss {
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
-
-        this.state = SnakeBossState.Rest;
-        this.timer = 0;
-
-    }
-
-    Update(target, dt) {
-
-        let snakeWasKill = 0;
-        for(let i = 1; i < this.nodeCount; ++i) {
-            if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
-                g.snakeBoss.nodes[i].alive = false;
-            }
-            if(!g.snakeBoss.nodes[i].life) {
-                snakeWasKill++;
-            }
-        }
-
-        if(snakeWasKill === this.nodeCount-1) {
-            g.gameStateManager.PopState();
-        }
- 
-        let tar = new Vec2(target.x, target.y);
-        switch(this.state) {
-            case SnakeBossState.Attack:
-                this.ProcessSnakeAttackState(tar, dt);
-                break;
-            case SnakeBossState.PrepareAttack:
-                this.ProcessSnakePrepareAttackState(tar, dt);
-                break;
-            case SnakeBossState.Rest:
-                this.ProcessSnakeRestState(tar, dt);
-                break;
-            case SnakeBossState.Seek:
-                this.ProcessSnakeSeekState(tar, dt);
-                break;
-        }
-        this.ProcessSnakeBody();
-        this.ProcessDamageToPlayer(dt);
-
-        this.timer += dt;
     }
 
     Reset() {
@@ -85,22 +45,55 @@ class SnakeBoss {
 
         this.nodes[0].sprite.w *= 1.6;
         this.nodes[0].sprite.h *= 1.6;
+        this.nodes[0].life = 40;
         this.nodes[this.nodeCount - 1].sprite.w *= 1.4;
         this.nodes[this.nodeCount - 1].sprite.h *= 1.4;
+        this.nodes[this.nodeCount - 1].life = 40;
 
+        this.state = SnakeBossState.Rest;
+        this.timer = 0;
     }
 
-    ProcessDamageToPlayer(dt) {
-        for(let i = 0; i < this.nodes.length; ++i) {
-            if(this.nodes[i].alive || i == 0) {
-                let pos = this.nodes[i].pos;
-                let sprite = this.nodes[i].sprite;
-                let circle = new Circle(pos, 50*0.45);
-                if(TestCircleCircle(circle, g.player.GetCircle())) {   
-                    g.player.DecreaseHealth(1);
-                }
+    Update(target, dt) {
+
+        let snakeWasKill = 0;
+        for(let i = 0; i < this.nodeCount; ++i) {
+            if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
+                g.snakeBoss.nodes[i].alive = false;
+            }
+            if(!g.snakeBoss.nodes[i].life) {
+                snakeWasKill++;
             }
         }
+
+        if(snakeWasKill === this.nodeCount) {
+            this.state = SnakeBossState.Dead;
+        }
+ 
+        let tar = new Vec2(target.x, target.y);
+        switch(this.state) {
+            case SnakeBossState.Attack:
+                this.ProcessSnakeAttackState(tar, dt);
+                break;
+            case SnakeBossState.PrepareAttack:
+                this.ProcessSnakePrepareAttackState(tar, dt);
+                break;
+            case SnakeBossState.Rest:
+                this.ProcessSnakeRestState(tar, dt);
+                break;
+            case SnakeBossState.Seek:
+                this.ProcessSnakeSeekState(tar, dt);
+                break;
+            case SnakeBossState.Dead:
+                this.ProcessSnakeDeadSTate(tar, dt);
+        }
+        this.ProcessSnakeBody();
+
+        if(snakeWasKill !== this.nodeCount) {
+            this.ProcessDamageToPlayer(dt);
+        }
+        
+        this.timer += dt;
     }
 
     Render(shader) {
@@ -139,6 +132,19 @@ class SnakeBoss {
         this.nodes[0].sprite.Update(0.016);
         this.nodes[0].sprite.Render(shader);
 
+    }
+
+    ProcessDamageToPlayer(dt) {
+        for(let i = 0; i < this.nodes.length; ++i) {
+            if(this.nodes[i].alive || i == 0) {
+                let pos = this.nodes[i].pos;
+                let sprite = this.nodes[i].sprite;
+                let circle = new Circle(pos, 50*0.45);
+                if(TestCircleCircle(circle, g.player.GetCircle())) {   
+                    g.player.DecreaseHealth(1);
+                }
+            }
+        }
     }
 
     ProcessSnakeAttackState(tar, dt) {
@@ -226,5 +232,12 @@ class SnakeBoss {
         this.pos = Vec2Add(this.pos, vel);
         let damping = Math.pow(0.1, dt);
         this.linVel *= damping;
+    }
+
+    ProcessSnakeDeadSTate(tar, dt) {
+        if(this.timer >= 8.0) {
+            g.gameStateManager.PopState();
+            this.timer = 0;
+        }
     }
 }

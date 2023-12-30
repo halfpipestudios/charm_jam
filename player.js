@@ -29,6 +29,38 @@ class Player {
         this.sprite.color = c.white;
     }
 
+    PlayerHitWall(aabb, normal, dt) {
+        let ray = new Ray(this.pos, Vec2Normalize(this.vel));
+        let t = IntersectRayAABB(ray, aabb);
+        let d = Vec2MulScalar(this.vel, dt);
+        if(t >= 0 && t*t < Vec2Dot(d, d)) {
+            this.vel = Vec2Sub(this.vel, Vec2MulScalar(normal, Vec2Dot(normal, this.vel)));
+        }
+    }
+
+    ProcessPlayerWallCollisions(dt) {
+        // left wall
+        let min = new Vec2(-10, -10);
+        let max = new Vec2(10, g.window_h + 10);
+        let aabb = new AABB(min, max);
+        this.PlayerHitWall(aabb, new Vec2(1, 0, 0), dt);
+        // right wall
+        min = new Vec2(g.window_w-10, -10);
+        max = new Vec2(g.window_w+10, g.window_h + 10);
+        aabb = new AABB(min, max);
+        this.PlayerHitWall(aabb, new Vec2(-1, 0, 0), dt);
+        // top wall
+        min = new Vec2(-10, g.window_h-10);
+        max = new Vec2(g.window_w+10, g.window_h + 10);
+        aabb = new AABB(min, max);
+        this.PlayerHitWall(aabb, new Vec2(0, -1, 0), dt);
+        // bottom wall
+        min = new Vec2(-10, -10);
+        max = new Vec2(g.window_w+10, 10);
+        aabb = new AABB(min, max);
+        this.PlayerHitWall(aabb, new Vec2(0, -1, 0), dt);
+    }
+
     Update(dt) {
 
         let faceDir = new Vec2(0, 0);
@@ -78,10 +110,15 @@ class Player {
         let dir = new Vec2(Math.cos(this.orientation), Math.sin(this.orientation));
 
         this.vel = Vec2Add(this.vel, Vec2MulScalar(acc, dt));
+        
+        this.ProcessPlayerWallCollisions(dt);
+
         this.pos = Vec2Add(this.pos, Vec2MulScalar(this.vel, dt));
 
         let damping = Math.pow(0.003, dt);
         this.vel = Vec2MulScalar(this.vel, damping);
+
+        
 
         this.head.pos = Vec2Add(this.pos, Vec2MulScalar(dir, 25));
         this.head.rotation = -this.orientation;

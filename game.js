@@ -154,7 +154,7 @@ class Game {
 
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:
-                if(KeyJustDown(KeyCode.KEY_1)) {
+                if(KeyJustDown(KeyCode.KEY_1) || KeyJustDown(KeyCode.KEY_SPACE)) {
                     g.gameStateManager.SetState(GameState.Stage1, () => {
                         g.boss.Reset();
                         g.player.Reset();
