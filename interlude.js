@@ -1,7 +1,7 @@
 class Interlude {
 
     constructor() {
-        this.duration = 5;
+        this.duration = 3;
         this.timer = 0;
         this.sprite = new Sprite(new Vec2(g.window_w/2, g.window_h/2), g.window_w, g.window_h, c.white);
     
@@ -10,6 +10,7 @@ class Interlude {
     }
 
     SetNextStateAndTexture(state, texture) {
+        g.soundManager.StopSounds();
         this.state = state;
         this.texture = texture;
         this.timer = 0;

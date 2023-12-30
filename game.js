@@ -183,13 +183,13 @@ class Game {
 
                 if(KeyJustDown(KeyCode.KEY_SPACE)) {
                     g.interlude.SetNextStateAndTexture(nextState, "intro1");
+                    g.gameStateManager.SetState(GameState.Interlude, null);
                 }
 
                 break;
             }
-
             case GameState.Interlude:
-                g.interlude.Update(dt);
+                g.interlude.Update(deltaTime);
                 break;
             case GameState.Defeated:
                 break;

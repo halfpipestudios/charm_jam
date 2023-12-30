@@ -42,6 +42,8 @@ class Boss {
 
     Reset() {
         
+        this.currentTime = 0;
+
         this.defeted = false;
         this.defetedTime = 0;
 
@@ -92,13 +94,18 @@ class Boss {
 
         if(this.defeted) {
             if(this.defetedTime > this.defetedDuration) {
-                g.gameStateManager.SetState(GameState.Stage2, () => {
+
+                let nextState = {state: GameState.Stage2, onEnter: () => {
                     g.soundManager.StopSounds();
                     g.soundManager.GetSound("level2").Play();
                     g.snakeBoss.Reset();
                     g.player.Reset();
                     g.life.Reset();
-                });
+                }}
+
+                g.interlude.SetNextStateAndTexture(nextState, "intro2");
+                g.gameStateManager.SetState(GameState.Interlude, null);
+
             }
 
             this.pos.x = this.pos.x + (Math.random() * 2 - 1) * 10;
