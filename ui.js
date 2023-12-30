@@ -15,10 +15,7 @@ class Ui {
             x += r + p;
         }
         
-        this.tuto = new Sprite(new Vec2(256 + 10, 256 + 10), 512, 512, c.white);
-        this.tuto2 = new Sprite(new Vec2(256 + 650, 256 + 200), 512, 512, c.white);
-        this.tuto3 = new Sprite(new Vec2(256 + 650, 128), 512, 128, c.white);
-
+        this.tuto = new Sprite(new Vec2(g.window_w/2, g.window_h/2), g.window_w, g.window_h, c.white);
     }
 
     Update(dt) {
@@ -35,10 +32,6 @@ class Ui {
             case GameState.Menu:
                 g.textureManager.BindTexture("tuto");
                 this.tuto.Render(g.shader);
-                g.textureManager.BindTexture("tuto2");
-                this.tuto2.Render(g.shader);
-                g.textureManager.BindTexture("tuto3");
-                this.tuto3.Render(g.shader);
                 break;
             case GameState.Defeated:
                 break;
