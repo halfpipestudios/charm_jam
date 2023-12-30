@@ -47,6 +47,7 @@ function InitGlobals() {
     g.textureManager.AddTexture("snake_bad_tail", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/snake_bad_tale.png");
     g.textureManager.AddTexture("tuto", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/tuto1.png");
     g.textureManager.AddTexture("pinguino", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/penguin.png");
+    g.textureManager.AddTexture("grid", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/grid.png");
     
     g.camera = new Camera();
 
@@ -91,6 +92,11 @@ class GameStateManager {
 }
 
 class Game {
+
+    constructor() {
+        this.backgournd = new Sprite(new Vec2(g.window_w/2, g.window_h/2), g.window_w, g.window_h, c.white);
+    }
+
     Initialize() {
 
         InitGlobals();
@@ -154,10 +160,14 @@ class Game {
             case GameState.Pause: 
                 break;
             case GameState.Stage1:
+                g.textureManager.BindTexture("grid");
+                this.backgournd.Render(g.shader);
                 g.player.Render(g.shader);
                 g.boss.Render();
                 break;
             case GameState.Stage2: 
+                g.textureManager.BindTexture("grid");
+                this.backgournd.Render(g.shader);
                 g.player.Render(g.shader);
                 g.snakeBoss.Render(g.shader);
                 break;
