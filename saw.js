@@ -2,6 +2,7 @@
 const SawState = {
     Idle:      "idle",
     Shoting:   "shoting",
+    Preparing: "preparing",
     Returning: "returning",
 }
 
@@ -12,6 +13,8 @@ class Saw {
         this.parent = parent;
         this.offset = offset;
         
+        this.target = new Vec2;
+
         this.start = Vec2Add(this.parent.pos, this.offset);
         this.end = new Vec2;
         this.shotPos = new Vec2;
@@ -32,6 +35,10 @@ class Saw {
         this.health = 100;
         this.charming = false;
 
+        this.preparingDuration = 0.4;
+        this.preparingTime = 0;
+        this.firstTimePreparing = true;
+
         this.angle = 0;
     }
 
@@ -41,10 +48,21 @@ class Saw {
         this.sprite.color = c.gray1;
     }
 
-    Shot(target, speed) {
+    PrepareAndShot(target, speed)  {
         if(speed < 0.001) return;
 
         if(this.state != SawState.Idle) return; 
+        this.state = SawState.Preparing;
+
+        this.speed = speed;
+        this.target = target;
+
+    }
+
+    Shot(target, speed) {
+        if(speed < 0.001) return;
+
+        if(this.state != SawState.Preparing) return; 
         this.state = SawState.Shoting;
         
         this.speed = speed;
@@ -64,6 +82,9 @@ class Saw {
         switch(this.state) {
             case SawState.Idle:
                 this.ProcessIdleState(dt);
+                break;
+            case SawState.Preparing:
+                this.ProcessPreparingState(dt);
                 break;
             case SawState.Shoting:
                 this.ProcessShottingState(dt);
@@ -100,6 +121,22 @@ class Saw {
 
     }
 
+    ProcessPreparingState(dt) {
+        if(this.preparingTime > this.preparingDuration) {
+            this.preparingTime = 0;
+            this.firstTimePreparing = true;
+            this.Shot(this.target, this.speed);
+            return;
+        }
+
+        if(this.firstTimePreparing) {
+            this.sprite.PlayDamageAnimation(this.preparingDuration, c.blue, 50);
+            this.firstTimePreparing = false;
+        }
+
+        this.preparingTime += dt;
+    }
+
     ProcessShottingState(dt) {
 
         if(this.currentTime > this.enableTime) {
@@ -109,7 +146,7 @@ class Saw {
             this.state = SawState.Returning;
             return;
         }
-        
+
         let dir = Vec2Normalize(Vec2Sub(this.end, this.shotPos));
         this.pos = Vec2Add(this.shotPos, Vec2MulScalar(dir, this.speed * this.currentTime));
         this.currentTime += dt;

@@ -28,8 +28,9 @@ class Player {
     Reset() {
         this.health = 4;
         this.pos = new Vec2(g.window_w/2, g.window_h/2);
-        this.damageAnimationEnable = false;
         this.sprite.color = c.white;
+        this.damageAnimationEnable = false;
+        this.deathAnimationEnable = false;
     }
 
     PlayerHitWall(aabb, normal, dt) {
