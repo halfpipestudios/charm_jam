@@ -81,6 +81,7 @@ class Bullet {
     } 
     
     Render(shader) {
+        g.textureManager.BindTexture("bullet");
         this.sprite.Render(shader);
     }
 
