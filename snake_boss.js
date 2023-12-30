@@ -139,7 +139,7 @@ class SnakeBoss {
             if(this.nodes[i].alive || i == 0) {
                 let pos = this.nodes[i].pos;
                 let sprite = this.nodes[i].sprite;
-                let circle = new Circle(pos, 50*0.45);
+                let circle = new Circle(pos, 50*0.60);
                 if(TestCircleCircle(circle, g.player.GetCircle())) {   
                     g.player.DecreaseHealth(1);
                 }

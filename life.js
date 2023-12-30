@@ -7,6 +7,11 @@ class Life {
         this.timer = 0;
     }
 
+    Reset() {
+        this.active = false;
+        this.timer = 0;
+    }
+
     Spawn(pos, dt) {
         this.circle.c = pos;
         this.sprite.pos = pos;

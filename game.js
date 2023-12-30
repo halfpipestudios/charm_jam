@@ -160,12 +160,14 @@ class Game {
                     g.gameStateManager.SetState(GameState.Stage1, () => {
                         g.boss.Reset();
                         g.player.Reset();
+                        g.life.Reset();
                     });
                 }
                 if(KeyJustDown(KeyCode.KEY_2)) {
                     g.gameStateManager.SetState(GameState.Stage2, () => {
                         g.snakeBoss.Reset();
                         g.player.Reset();
+                        g.life.Reset();
                     });
                 }
                 break;
