@@ -79,7 +79,11 @@ class Saw {
     }
 
     Render() {
-        g.textureManager.BindTexture("saw");
+        if(this.charming) {
+            g.textureManager.BindTexture("flower");
+        } else {
+            g.textureManager.BindTexture("saw");
+        }
         this.sprite.Render(g.shader);
     }
     
@@ -153,7 +157,6 @@ class Saw {
         this.health = Math.max(this.health - amount, 0);
         if(this.health == 0) {
             this.charming = true;
-            this.sprite.color = c.green;
         }
         else {
             this.sprite.PlayDamageAnimation(0.2, c.overflow, 100);

@@ -62,8 +62,6 @@ function InitGlobals() {
     g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
 
     g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet1.png");
-    g.textureManager.AddTexture("saw", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/saw.png");
-    g.textureManager.AddTexture("boss", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss.png");
     g.textureManager.AddTexture("life", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/life.png");
     g.textureManager.AddTexture("snake_bad_head", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/snake_bad_head.png");
     g.textureManager.AddTexture("snake_bad_body", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/snake_bad_body.png");
@@ -77,6 +75,10 @@ function InitGlobals() {
     g.textureManager.AddTexture("pinguino", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/penguin.png");
     g.textureManager.AddTexture("grid", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/grid.png");
     g.textureManager.AddTexture("gun", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/gun.png");
+
+    g.textureManager.AddTexture("saw", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/saw.png");
+    g.textureManager.AddTexture("boss", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss.png");
+    g.textureManager.AddTexture("flower", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/flower.png");
     
     LoadQuadToGPU();
     

@@ -62,8 +62,6 @@ class Sprite {
         let t = (Math.sin(this.damageAnimationCurrentTime * this.dameAnimationFreq) + 1) / 2;
         this.color = Vec4Lerp(this.dameAnimationSrcColor, this.dameAnimationDesColor, t);
         this.damageAnimationCurrentTime += dt;
-        console.log(this.color);
-        
     }
 }
 
