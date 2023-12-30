@@ -107,14 +107,14 @@ class SnakeBoss {
 
     Render(shader) {
 
-        g.textureManager.BindTexture("snake_bad_tail");
+        g.textureManager.BindTexture("snake_cute_tail");
         this.nodes[this.nodeCount - 1].sprite.pos = this.nodes[this.nodeCount - 1].pos;
         this.nodes[this.nodeCount - 1].sprite.rotation = -(this.nodes[this.nodeCount - 1].orientation + Math.PI/2);
         this.nodes[this.nodeCount - 1].sprite.color = this.nodes[this.nodeCount - 1].color;
         this.nodes[this.nodeCount - 1].sprite.Update(0.016);
         this.nodes[this.nodeCount - 1].sprite.Render(shader);
 
-        g.textureManager.BindTexture("snake_bad_body");
+        g.textureManager.BindTexture("snake_cute_body");
         for(let i = this.nodeCount - 2; i >= 1; --i) {
             this.nodes[i].sprite.pos = this.nodes[i].pos;
             this.nodes[i].sprite.rotation = -(this.nodes[i].orientation + Math.PI/2);
@@ -123,7 +123,7 @@ class SnakeBoss {
             this.nodes[i].sprite.Render(shader);
         }
 
-        g.textureManager.BindTexture("snake_bad_head");
+        g.textureManager.BindTexture("snake_cute_head");
         this.nodes[0].sprite.pos = this.nodes[0].pos;
         this.nodes[0].sprite.rotation = -(this.nodes[0].orientation + Math.PI/2);
         this.nodes[0].sprite.color = this.nodes[0].color;
