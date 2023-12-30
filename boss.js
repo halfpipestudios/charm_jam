@@ -36,6 +36,8 @@ class Boss {
         this.defetedTime = 0;
         this.defetedDuration = 8;
 
+        this.preparingSaw = false;
+
     }
 
     Reset() {
@@ -90,15 +92,15 @@ class Boss {
             this.defetedTime += dt;
         }
 
-        let preparingSaw = false;
+        this.preparingSaw = false;
         let charmingSawCount = 0;
         for(let i = 0; i < this.saws.length; ++i) {
             this.saws[i].Update(dt);
             if(this.saws[i].charming === true) ++charmingSawCount;
-            if(this.saws[i].state === SawState.Preparing) preparingSaw = true;
+            if(this.saws[i].state === SawState.Preparing) this.preparingSaw = true;
         }
 
-        if(preparingSaw) {
+        if(this.preparingSaw) {
             this.pos.x = this.pos.x + (Math.random() * 2 - 1) * 4;
             this.pos.y = this.pos.y + (Math.random() * 2 - 1) * 4;
         }
@@ -121,7 +123,14 @@ class Boss {
 
     Render() {
         
-        g.textureManager.BindTexture("boss");
+        if(this.defeted) {
+            g.textureManager.BindTexture("boss_cute");
+        } else if(this.preparingSaw) {
+            g.textureManager.BindTexture("boss_angry");
+        } else {
+            g.textureManager.BindTexture("boss");
+        }
+
         this.sprite.Render(g.shader);
 
         for(let i = 0; i < this.shipContainer.length; ++i) {
