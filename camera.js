@@ -5,9 +5,9 @@ class Camera {
         this.screenShakeEnable = false;
         this.screenShakeTime = 0;
         
-        this.screenShakeDuration = 0.8;
+        this.screenShakeDuration = 0.4;
         this.screenShakeFrequency = 30;
-        this.screenShakeAmplitude = 16;
+        this.screenShakeAmplitude = 64;
         this.screenShakeSamplesX = [];
         this.screenShakeSamplesY = [];
 

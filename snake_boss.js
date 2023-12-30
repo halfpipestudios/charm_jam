@@ -10,17 +10,19 @@ class SnakeBoss {
     
 
     constructor() {
+        let scale = 1.5;
+
         this.nodes = [];
-        this.nodeCount = 50;
-        this.nodeDistance = 30;
+        this.nodeCount = 30;
+        this.nodeDistance = 35 * scale;
 
         this.Reset();
         
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
-
-        this.sprite = new Sprite(this.pos, 50, 50, c.white);
+        let w = 50 * scale;
+        this.sprite = new Sprite(this.pos, w, w, c.white);
 
         this.state = SnakeBossState.Rest;
         this.timer = 0;
@@ -77,7 +79,7 @@ class SnakeBoss {
                  pos: new Vec2(currentPos.x, currentPos.y),
                  orientation: 0,
                  color: c.white,
-                 life: 1,
+                 life: 3,
                  alive: true});
             currentPos.y += this.nodeDistance;
         }
