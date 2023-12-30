@@ -19,6 +19,9 @@ class Player {
         this.dameAnimationSrcColor      = c.white;
         this.dameAnimationDesColor      = c.red;
 
+        this.deathAnimationEnable = false;
+        this.deathAnimationDuration = 8;
+        this.deathAnimationCurrentTime = 0;
 
     }
 
@@ -67,6 +70,8 @@ class Player {
             acc = Vec2MulScalar(Vec2Normalize(acc), 1600);
         }
 
+        if(this.deathAnimationEnable) acc = new Vec2(0, 0);
+
         let currentOrientation = this.orientation;
         let targetOrientation = Vec2ToAngle(faceDir);
         let angularDist = targetOrientation - currentOrientation;
@@ -90,11 +95,15 @@ class Player {
         this.sprite.Update(dt);
         this.head.Update(dt);
 
-        this.weapon.Update(this.pos, dir, dt);
-
+        if(!this.deathAnimationEnable) {
+            this.weapon.Update(this.pos, dir, dt);
+        }
+        
         this.lastFaceDir = faceDir;
 
         this.UpdateDamageAnimation(dt);
+        this.UpdateDeathAnimation(dt);
+
     }
 
     Render(shader) {
@@ -108,12 +117,16 @@ class Player {
     }
 
     DecreaseHealth(amount) {
+        
         if(this.damageAnimationEnable) return;
+        if(this.deathAnimationEnable) return;
+
         this.health = Math.max(this.health - amount, 0);
         this.PlayDamageAnimation();
         g.camera.ScreenShake();
+
         if(this.health == 0) {
-            g.gameStateManager.PopState();
+            this.PlayDeathAnimation();
         }
     }
 
@@ -134,6 +147,23 @@ class Player {
         let t = (Math.sin(this.damageAnimationCurrentTime * 100) + 1) / 2;
         this.sprite.color = Vec4Lerp(this.dameAnimationSrcColor, this.dameAnimationDesColor, t);
         this.damageAnimationCurrentTime += dt;
+    }
+
+    PlayDeathAnimation() {
+        this.deathAnimationEnable = true;
+        this.deathAnimationCurrentTime = 0;
+        this.sprite.PlayDamageAnimation(this.deathAnimationDuration, c.red, 10);
+    }
+
+    UpdateDeathAnimation(dt) {
+        if(!this.deathAnimationEnable) return;
+
+        if(this.deathAnimationCurrentTime > this.deathAnimationDuration) {
+            this.deathAnimationEnable = false;
+            g.gameStateManager.SetState(GameState.Menu, null);
+        }
+
+        this.deathAnimationCurrentTime += dt;
     }
 
     GetCircle() {

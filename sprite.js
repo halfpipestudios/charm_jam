@@ -13,7 +13,7 @@ class Sprite {
         this.dameAnimationSrcColor      = c.white;
         this.dameAnimationDesColor      = c.white;
         this.dameAnimationFreq          = 1;
-
+        
         // TODO: set this matrix to represent the scale and position of the sprite
         this.model = Mat4Mul(Mat4Mul(Mat4Translate(this.pos.x, this.pos.y, 0), Mat4Scale(this.w, this.h, 1)), Mat4RotateZ(this.rotation));
     }

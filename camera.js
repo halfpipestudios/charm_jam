@@ -5,7 +5,8 @@ class Camera {
         this.screenShakeEnable = false;
         this.screenShakeTime = 0;
         
-        this.screenShakeDuration = 0.4;
+        this.screenShakeDurationDefault = 0.4;
+        this.screenShakeDuration = this.screenShakeDurationDefault;
         this.screenShakeFrequency = 30;
         this.screenShakeAmplitude = 64;
         this.screenShakeSamplesX = [];
@@ -52,8 +53,14 @@ class Camera {
     }
 
     ScreenShake() {
+        if(this.screenShakeEnable) return;
+
         this.screenShakeEnable = true;
         this.screenShakeTime = 0;
+        this.screenShakeDuration = this.screenShakeDurationDefault;
+
+        this.screenShakeSamplesX = [];
+        this.screenShakeSamplesY = [];
 
         for(let i = 0; i < this.samplesCount; ++i) {
             this.screenShakeSamplesX.push(Math.random() * 2 - 1);
