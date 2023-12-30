@@ -66,8 +66,9 @@ class SnakeBoss {
             }
         }
 
-        if(snakeWasKill === this.nodeCount) {
+        if(snakeWasKill === this.nodeCount && this.state !== SnakeBossState.Dead) {
             this.state = SnakeBossState.Dead;
+            this.timer = 0.0;
         }
  
         let tar = new Vec2(target.x, target.y);
@@ -85,7 +86,7 @@ class SnakeBoss {
                 this.ProcessSnakeSeekState(tar, dt);
                 break;
             case SnakeBossState.Dead:
-                this.ProcessSnakeDeadSTate(tar, dt);
+                this.ProcessSnakeDeadState(tar, dt);
         }
         this.ProcessSnakeBody();
 
@@ -234,10 +235,15 @@ class SnakeBoss {
         this.linVel *= damping;
     }
 
-    ProcessSnakeDeadSTate(tar, dt) {
+    ProcessSnakeDeadState(tar, dt) {
         if(this.timer >= 8.0) {
             g.gameStateManager.PopState();
             this.timer = 0;
+        }
+
+        for(let i = 0; i < this.nodeCount; ++i) {
+            this.nodes[i].pos.x = this.nodes[i].pos.x + (Math.random() * 2 - 1) * 10;
+            this.nodes[i].pos.y = this.nodes[i].pos.y + (Math.random() * 2 - 1) * 10;
         }
     }
 }
