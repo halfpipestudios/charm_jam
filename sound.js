@@ -41,4 +41,10 @@ class SoundManager {
         return sound;
     }
 
+    StopSounds() {
+        for (const [name, sound] of this.sounds) { // Using the default iterator (could be `map.entries()` instead)
+            sound.Stop();
+        }
+    }
+
 }

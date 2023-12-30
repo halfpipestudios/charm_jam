@@ -73,6 +73,10 @@ class Saw {
 
         this.currentTime = 0;
         this.enableTime = Vec2Sub(this.end, this.start).length() / this.speed;
+
+        g.soundManager.GetSound("saw").Stop();
+        g.soundManager.GetSound("saw").Play();
+
     }
 
     Update(dt) {

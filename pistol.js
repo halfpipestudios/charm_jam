@@ -113,6 +113,8 @@ class Pistol {
     }
 
     Shoot(pos, vel) {
+        g.soundManager.GetSound("shoot").Stop();
+        g.soundManager.GetSound("shoot").Play();
         this.bullets[this.currentBullet].pos = pos;
         this.bullets[this.currentBullet].vel = vel;
         this.bullets[this.currentBullet].sprite.w = 32;

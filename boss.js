@@ -92,7 +92,13 @@ class Boss {
 
         if(this.defeted) {
             if(this.defetedTime > this.defetedDuration) {
-                g.gameStateManager.SetState(GameState.Menu, null);
+                g.gameStateManager.SetState(GameState.Stage2, () => {
+                    g.soundManager.StopSounds();
+                    g.soundManager.GetSound("level2").Play();
+                    g.snakeBoss.Reset();
+                    g.player.Reset();
+                    g.life.Reset();
+                });
             }
 
             this.pos.x = this.pos.x + (Math.random() * 2 - 1) * 10;

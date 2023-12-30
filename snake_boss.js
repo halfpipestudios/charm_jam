@@ -23,6 +23,8 @@ class SnakeBoss {
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.5;
+
+        this.prepareAttackPos = 0;
     }
 
     Reset() {
@@ -172,7 +174,7 @@ class SnakeBoss {
         this.maxAngVel = 3*Math.PI;
         this.maxAcc = 800;
         this.timeToTarget = 0.3;
-        tar = new Vec2(10000, 10000);
+        tar = this.prepareAttackPos;
         this.ProcessSnakeMovement(tar, dt);
     }
 
@@ -186,6 +188,9 @@ class SnakeBoss {
             else
             {
                 this.state = SnakeBossState.PrepareAttack;
+                let x = Math.cos(Math.random() * 2 * Math.PI) * 10000;
+                let y = Math.sin(Math.random() * 2 * Math.PI) * 10000;
+                this.prepareAttackPos = new Vec2(x, y);
             }
             this.timer = 0;
         }
@@ -249,7 +254,9 @@ class SnakeBoss {
 
     ProcessSnakeDeadState(tar, dt) {
         if(this.timer >= 8.0) {
-            g.gameStateManager.PopState();
+            g.gameStateManager.SetState(GameState.Menu, () => {
+                g.soundManager.StopSounds();
+            });
             this.timer = 0;
         }
 

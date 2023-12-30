@@ -196,6 +196,8 @@ class Player {
     }
 
     PlayDamageAnimation()  {
+        g.soundManager.GetSound("hit").Stop();
+        g.soundManager.GetSound("hit").Play();
         this.damageAnimationEnable = true;
         this.damageAnimationCurrentTime = 0;
     }
@@ -225,7 +227,10 @@ class Player {
 
         if(this.deathAnimationCurrentTime > this.deathAnimationDuration) {
             this.deathAnimationEnable = false;
-            g.gameStateManager.SetState(GameState.Menu, null);
+            g.gameStateManager.SetState(GameState.Menu, () => {
+                g.soundManager.StopSounds();
+            });
+            g.soundManager.StopSounds();
         }
 
         this.deathAnimationCurrentTime += dt;

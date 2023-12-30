@@ -27,6 +27,7 @@ var g = {
     life: null,
 
     ui : null,
+    interlude : null,
 
     gameStateManager: null,
 
@@ -59,9 +60,14 @@ function LoadQuadToGPU() {
 function InitGlobals() {
     g.shader.Initialize(basicVertexShaderSrc, basicFragmentShaderSrc);
 
-    g.soundManager.AddSound("cave", "./assets/sound.wav", true);
-    g.soundManager.AddSound("shoot", "./assets/Spell_01.wav", false);
-    g.soundManager.AddSound("hit", "./assets/Trap_00.wav", false);
+    g.soundManager.AddSound("level1", "./assets/level1.mp3", true);
+    g.soundManager.AddSound("level2", "./assets/level2.mp3", true);
+    g.soundManager.GetSound("level1").player.volume = 0.25;
+    g.soundManager.GetSound("level2").player.volume = 0.25;
+
+    g.soundManager.AddSound("hit", "./assets/hit.mp3", false);
+    g.soundManager.AddSound("shoot", "./assets/shoot.mp3", false);
+    g.soundManager.AddSound("saw", "./assets/saw.mp3", false);
 
     g.textureManager.AddTexture("bullet", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/bullet1.png");
     g.textureManager.AddTexture("life", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/life.png");
@@ -86,6 +92,9 @@ function InitGlobals() {
     g.textureManager.AddTexture("boss_cute", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss_cute.png");
     g.textureManager.AddTexture("boss_angry", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss_angry.png");
     
+    g.textureManager.AddTexture("intro1", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/intro1.png");
+    g.textureManager.AddTexture("intro2", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/intro2.png");
+    
     LoadQuadToGPU();
     
     g.camera = new Camera();
@@ -96,6 +105,7 @@ function InitGlobals() {
     g.life = new Life();
 
     g.ui = new Ui();
+    g.interlude = new Interlude();
 
     g.gameStateManager = new GameStateManager();
 }
@@ -106,6 +116,7 @@ const GameState = {
     Pause: "pause",
     Stage1: "stage1",
     Stage2: "stage2",
+    Interlude: "interlude",
 }
 
 class GameStateManager {
@@ -159,21 +170,26 @@ class Game {
         g.camera.Update(deltaTime);
 
         switch(g.gameStateManager.GetState()) {
-            case GameState.Menu:
-                if(KeyJustDown(KeyCode.KEY_1) || KeyJustDown(KeyCode.KEY_SPACE)) {
-                    g.gameStateManager.SetState(GameState.Stage1, () => {
-                        g.boss.Reset();
-                        g.player.Reset();
-                        g.life.Reset();
-                    });
+            
+            case GameState.Menu: {
+                
+                let nextState = {state: GameState.Stage1, onEnter: () => {
+                    g.soundManager.StopSounds();
+                    g.soundManager.GetSound("level1").Play();
+                    g.boss.Reset();
+                    g.player.Reset();
+                    g.life.Reset();
+                }}
+
+                if(KeyJustDown(KeyCode.KEY_SPACE)) {
+                    g.interlude.SetNextStateAndTexture(nextState, "intro1");
                 }
-                if(KeyJustDown(KeyCode.KEY_2)) {
-                    g.gameStateManager.SetState(GameState.Stage2, () => {
-                        g.snakeBoss.Reset();
-                        g.player.Reset();
-                        g.life.Reset();
-                    });
-                }
+
+                break;
+            }
+
+            case GameState.Interlude:
+                g.interlude.Update(dt);
                 break;
             case GameState.Defeated:
                 break;
@@ -198,6 +214,9 @@ class Game {
 
         switch(g.gameStateManager.GetState()) {
             case GameState.Menu:
+                break;
+            case GameState.Interlude:
+                g.interlude.Render();
                 break;
             case GameState.Defeated:
                 break;
