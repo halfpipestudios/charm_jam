@@ -33,7 +33,6 @@ class SnakeBoss {
         let snakeWasKill = 0;
         for(let i = 1; i < this.nodeCount; ++i) {
             if(g.snakeBoss.nodes[i].life == 0 && g.snakeBoss.nodes[i].alive) {
-                g.snakeBoss.nodes[i].color = c.green;
                 g.snakeBoss.nodes[i].alive = false;
             }
             if(!g.snakeBoss.nodes[i].life) {
@@ -79,8 +78,7 @@ class SnakeBoss {
                  pos: new Vec2(currentPos.x, currentPos.y),
                  orientation: 0,
                  sprite: this.sprite = new Sprite(new Vec2(currentPos.x, currentPos.y), w, w, c.white),
-                 color: c.white,
-                 life: 3,
+                 life: 5,
                  alive: true});
             currentPos.y += this.nodeDistance;
         }
@@ -106,27 +104,38 @@ class SnakeBoss {
     }
 
     Render(shader) {
-
-        g.textureManager.BindTexture("snake_cute_tail");
+        if(this.nodes[this.nodeCount - 1].alive) {
+            g.textureManager.BindTexture("snake_bad_tail");
+        }
+        else {
+            g.textureManager.BindTexture("snake_cute_tail");
+        }
         this.nodes[this.nodeCount - 1].sprite.pos = this.nodes[this.nodeCount - 1].pos;
         this.nodes[this.nodeCount - 1].sprite.rotation = -(this.nodes[this.nodeCount - 1].orientation + Math.PI/2);
-        this.nodes[this.nodeCount - 1].sprite.color = this.nodes[this.nodeCount - 1].color;
         this.nodes[this.nodeCount - 1].sprite.Update(0.016);
         this.nodes[this.nodeCount - 1].sprite.Render(shader);
 
-        g.textureManager.BindTexture("snake_cute_body");
         for(let i = this.nodeCount - 2; i >= 1; --i) {
+            if(this.nodes[i].alive) {
+                g.textureManager.BindTexture("snake_bad_body");
+            }
+            else {
+                g.textureManager.BindTexture("snake_cute_body");
+            }
             this.nodes[i].sprite.pos = this.nodes[i].pos;
             this.nodes[i].sprite.rotation = -(this.nodes[i].orientation + Math.PI/2);
-            this.nodes[i].sprite.color = this.nodes[i].color;
             this.nodes[i].sprite.Update(0.016);
             this.nodes[i].sprite.Render(shader);
         }
 
-        g.textureManager.BindTexture("snake_cute_head");
+        if(this.nodes[0].alive) {
+            g.textureManager.BindTexture("snake_bad_head");
+        }
+        else {
+            g.textureManager.BindTexture("snake_cute_head");
+        }
         this.nodes[0].sprite.pos = this.nodes[0].pos;
         this.nodes[0].sprite.rotation = -(this.nodes[0].orientation + Math.PI/2);
-        this.nodes[0].sprite.color = this.nodes[0].color;
         this.nodes[0].sprite.Update(0.016);
         this.nodes[0].sprite.Render(shader);
 

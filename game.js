@@ -5,7 +5,7 @@ var c = {
     green:  new Vec4(0, 1, 0, 1),
     green1: new Vec4(0.5, 1, 0, 1),
     red:    new Vec4(1, 0, 0, 1),
-    overflow: new Vec4(3, 3, 3, 1),
+    overflow: new Vec4(5, 5, 5, 1),
 
 }
 
