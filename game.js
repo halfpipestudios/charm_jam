@@ -79,6 +79,7 @@ function InitGlobals() {
     g.textureManager.AddTexture("saw", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/saw.png");
     g.textureManager.AddTexture("boss", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/boss.png");
     g.textureManager.AddTexture("flower", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/flower.png");
+    g.textureManager.AddTexture("ship", "https://raw.githubusercontent.com/halfpipestudios/charm_jam/main/assets/ship.png");
     
     LoadQuadToGPU();
     

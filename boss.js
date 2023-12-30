@@ -18,6 +18,11 @@ class Boss {
                      new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*5+padding*3), 0)),
                      new Saw(this, sawRadius, new Vec2(-(this.radius+sawRadius*7+padding*4), 0))];
     
+        this.shipContainer = [];
+        for(let i = 0; i < this.saws.length; ++i) {
+            let d = sawRadius*2+padding;
+            this.shipContainer.push(new Sprite(this.saws[i].pos, d, d, c.white));
+        }
 
         this.minShotSpeed = 600;
         this.maxShotSpeed = 700;
@@ -74,6 +79,11 @@ class Boss {
             this.saws[i].Update(dt);
         }
 
+        for(let i = 0; i < this.shipContainer.length; ++i) {
+            this.shipContainer[i].pos = this.saws[i].start;
+            this.shipContainer[i].Update(dt);
+        }
+
         this.sprite.pos = this.pos;
         this.sprite.Update();
 
@@ -83,6 +93,11 @@ class Boss {
         
         g.textureManager.BindTexture("boss");
         this.sprite.Render(g.shader);
+
+        for(let i = 0; i < this.shipContainer.length; ++i) {
+            g.textureManager.BindTexture("ship");
+            this.shipContainer[i].Render(g.shader);
+        }
 
         for(let i = 0; i < this.saws.length; ++i) {
             this.saws[i].Render();
